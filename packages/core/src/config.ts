@@ -1,22 +1,37 @@
 import { join } from "path";
 import { existsSync } from "fs";
-import { DEFAULT_CONFIG_EXTENSIONS } from "./constants";
+import { DEFAULT_CONFIG_EXTENSIONS, DEFAULT_FRAMEWORK_NAME, DEFAULT_NODE_ENV } from "./constants";
 import { merge, createEsbuildRegister, getModuleDefaultExport } from "@clownpack/helper";
 import { localEnvSuffix } from "./utils";
 
 interface IConfigOptions {
+  name: string;
   cwd: string;
   env: string;
-  name: string;
   customEnv?: string;
+  exts: string[];
 }
 
-export class ConfigService {
-  baseConfigFile: string | null = null;
-  constructor(public readonly options: IConfigOptions) {}
+export interface IConfigProvider<T> {
+  getUserConfig(): T;
+  getConfigFiles(): string[];
+}
 
-  getUserConfig() {
-    let config = {};
+export class DefaultConfigProvider<T> implements IConfigProvider<T> {
+  private baseConfigFile: string | null = null;
+  private readonly options: IConfigOptions;
+  constructor(options?: Partial<IConfigOptions>) {
+    this.options = {
+      name: DEFAULT_FRAMEWORK_NAME,
+      cwd: process.cwd(),
+      env: DEFAULT_NODE_ENV,
+      exts: DEFAULT_CONFIG_EXTENSIONS,
+      ...options,
+    };
+  }
+
+  getUserConfig(): T {
+    let config = {} as T;
     const configFiles = this.getConfigFiles();
     const unregister = createEsbuildRegister({
       hookMatcher: (fileName) => configFiles.includes(fileName),
@@ -33,9 +48,9 @@ export class ConfigService {
     return config;
   }
 
-  private getConfigFiles() {
-    const { env, cwd, name, customEnv } = this.options;
-    const defaultConfigFiles = DEFAULT_CONFIG_EXTENSIONS.map((ext) => `${name}.config${ext}`);
+  getConfigFiles(): string[] {
+    const { env, cwd, name, customEnv, exts = DEFAULT_CONFIG_EXTENSIONS } = this.options;
+    const defaultConfigFiles = exts.map((ext) => `${name}.config${ext}`);
     for (const configFile of defaultConfigFiles) {
       const absConfigPath = join(cwd, configFile);
       if (existsSync(absConfigPath)) {
@@ -44,24 +59,24 @@ export class ConfigService {
       }
     }
 
+    const addExt = (ext: string) => {
+      const file = this.baseConfigFile;
+      if (file) {
+        const i = file.lastIndexOf(".");
+        return file.slice(0, i) + ext + file.slice(i);
+      }
+      return null;
+    };
+
     const configFiles: string[] = [];
     if (this.baseConfigFile) {
       configFiles.push(
         this.baseConfigFile,
         ...localEnvSuffix({ env, customEnv })
-          .map((ext) => this.getEnvConfigFile(ext) || "")
+          .map((ext) => addExt(ext) || "")
           .filter(existsSync),
       );
     }
     return configFiles;
-  }
-
-  private getEnvConfigFile(ext: string) {
-    const file = this.baseConfigFile;
-    if (file) {
-      const i = file.lastIndexOf(".");
-      return file.slice(0, i) + ext + file.slice(i);
-    }
-    return null;
   }
 }

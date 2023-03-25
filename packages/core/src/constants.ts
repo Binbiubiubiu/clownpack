@@ -1,11 +1,7 @@
-export const DEFAULT_FRAMEWORK_NAME = "clownpack";
+export const DEFAULT_FRAMEWORK_NAME = "bundle";
 export const DEFAULT_CONFIG_EXTENSIONS = [".js", ".ts", ".mjs", ".mts", ".cts"];
 
-export enum CliCmd {
-  dev = "dev",
-  build = "build",
-  prebundle = "prebundle",
-}
+export const DEFAULT_NODE_ENV = process.env.NODE_ENV || "production";
 
 export const SHORT_ENV: Record<string, string> = {
   development: "dev",

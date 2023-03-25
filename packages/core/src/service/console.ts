@@ -1,6 +1,6 @@
 import { colorette } from "@clownpack/helper";
-import { ICommand } from "./types";
-import { Service } from "./service";
+import { ICommand, IConfiguration } from "../types";
+import { Service } from ".";
 
 export { showHelp, showHelps };
 
@@ -8,7 +8,7 @@ const COMMON_OPTIONS = {
   "-h, --help": "Print help information",
 };
 
-function showHelp(this: Service, subCommand: ICommand) {
+function showHelp<T extends IConfiguration>(this: Service<T>, subCommand: ICommand) {
   console.log();
   if (subCommand.description) {
     console.log(subCommand.description);
@@ -32,7 +32,7 @@ function showHelp(this: Service, subCommand: ICommand) {
   }
 }
 
-function showHelps(this: Service) {
+function showHelps<T extends IConfiguration>(this: Service<T>) {
   console.log();
   console.log(`Usage: ${colorette.magentaBright(this.frameworkName)} <COMMAND> [OPTIONS] `);
 
@@ -44,7 +44,7 @@ function showHelps(this: Service) {
     console.log("Commands:");
     for (const name in this.commands) {
       const cmd = this.commands[name];
-      if (name === "version" || cmd.isAlias) continue;
+      if (cmd.isAlias) continue;
 
       const ps = 10 - name.length;
       console.log(`    ${colorette.greenBright(cmd.name)}${blank(ps)}${cmd.description}`);

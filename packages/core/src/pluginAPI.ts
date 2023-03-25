@@ -8,15 +8,7 @@ import {
   colorette,
 } from "@clownpack/helper";
 import type { Service } from "./service";
-import {
-  IPlugin,
-  PluginItem,
-  ICommand,
-  IHook,
-  PluginOptsSchemaValidateFn,
-  Func,
-  ServiceStage,
-} from "./types";
+import { IPlugin, PluginItem, ICommand, IHook, Func, ServiceStage } from "./types";
 
 interface IPluginAPIOptions {
   plugin: IPlugin;
@@ -26,7 +18,7 @@ interface IPluginAPIOptions {
 export class PluginAPI {
   service: Service;
   plugin: IPlugin;
-  optsSchema: PluginOptsSchemaValidateFn | null = null;
+  optsSchema: ((joi: joi.Root) => joi.Schema) | null = null;
   constructor(options: IPluginAPIOptions) {
     this.service = options.service;
     this.plugin = options.plugin;
@@ -56,7 +48,7 @@ export class PluginAPI {
       }`,
     );
     let { alias } = cmd;
-    delete cmd.alias;
+    // delete cmd.alias;
     this.service.commands[cmd.name] = {
       ...cmd,
       pluginId: this.plugin.id,
@@ -110,17 +102,19 @@ export class PluginAPI {
     );
   }
 
-  addPluginOptsSchema(fn: PluginOptsSchemaValidateFn) {
-    this.optsSchema = fn;
+  addPluginOptsSchema(generator: typeof PluginAPI.prototype.optsSchema) {
+    this.optsSchema = generator;
   }
 
-  proxy(opts: {
+  static proxy(opts: {
+    api: PluginAPI;
+    service: Service;
     serviceProps: string[];
     extraProps: Record<string, any>;
   }) {
-    return new Proxy(this, {
+    return new Proxy(opts.api, {
       get: (target, key: string, receiver) => {
-        const methods = this.service.methods[key];
+        const methods = opts.service.methods[key];
         if (methods) {
           if (Array.isArray(methods)) {
             return (...args: any[]) => {
@@ -132,8 +126,8 @@ export class PluginAPI {
           return methods;
         }
 
-        if (opts.serviceProps.includes(key) && key in this.service) {
-          return Reflect.get(this.service, key);
+        if (opts.serviceProps.includes(key) && key in opts.service) {
+          return Reflect.get(opts.service, key);
         }
 
         if (opts.extraProps[key]) {
@@ -183,9 +177,7 @@ export class PluginAPI {
           try {
             return getModuleDefaultExport(require(id));
           } catch (e: any) {
-            throw new Error(`Register plugin ${name} failed, since ${e.message}`, {
-              cause: e,
-            });
+            throw new Error(`Register plugin ${name} failed, since ${e.message}`);
           } finally {
             unregister();
           }
@@ -194,8 +186,8 @@ export class PluginAPI {
     });
   }
 
-  static checkPluginOpts(plugin: IPlugin, fn: PluginOptsSchemaValidateFn) {
-    const schema = fn(joi);
+  static checkPluginOpts(plugin: IPlugin, generator: typeof PluginAPI.prototype.optsSchema) {
+    const schema = generator?.(joi);
     if (schema) {
       assert(
         joi.isSchema(schema),

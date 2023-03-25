@@ -1,4 +1,4 @@
-import type { IClownConfig } from "./types";
+import type { Configuration } from "./types";
 
-export const defineConfig = (config: IClownConfig) => config;
-export type { IClownConfig, IApi } from "./types";
+export const defineConfig = (config: Configuration) => config;
+export type { Configuration, IApi } from "./types";

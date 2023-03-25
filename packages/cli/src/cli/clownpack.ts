@@ -1,7 +1,7 @@
 import { yParser } from "@clownpack/helper";
-import { Service } from "@clownpack/service";
+import { Service } from "@clownpack/core";
 import { CliCmd } from "../constants";
-import { Env } from "../types";
+import { Env, Configuration } from "../types";
 
 export async function run() {
   const args = yParser(process.argv.slice(2));
@@ -17,7 +17,11 @@ export async function run() {
       process.env.NODE_ENV = Env.production;
   }
 
-  const service = new Service();
+  const service = new Service<Configuration>({
+    cwd: process.cwd(),
+    env: process.env.NODE_ENV,
+    plugins: [require.resolve("../preset")],
+  });
 
   await service.run({
     name: `${command}`,

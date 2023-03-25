@@ -3,22 +3,32 @@ import { AsyncSeriesWaterfallHook } from "tapable";
 import { join } from "path";
 import assert from "assert";
 import { colorette } from "@clownpack/helper";
-import { loadEnv } from "./utils";
-import { ApplyPluginsType, IPlugin, ServiceStage, type ICommand, type IHook } from "./types";
-import { ConfigService } from "./config";
-import { PluginAPI } from "./pluginAPI";
-import { DEFAULT_FRAMEWORK_NAME } from "./constants";
+import { loadEnv } from "../utils";
+import {
+  ApplyPluginsType,
+  ServiceStage,
+  type IPlugin,
+  type ICommand,
+  type IHook,
+  type IConfiguration,
+  PluginItem,
+} from "../types";
+import { DefaultConfigProvider, IConfigProvider } from "../config";
+import { PluginAPI } from "../pluginAPI";
+import { DEFAULT_FRAMEWORK_NAME, DEFAULT_NODE_ENV } from "../constants";
 import { showHelp, showHelps } from "./console";
 
 export { Service };
 
-interface IServiceOptions {
+interface IServiceOptions<T> {
   cwd?: string;
   env?: string;
   frameworkName?: string;
+  configProvider?: IConfigProvider<T>;
+  plugins?: PluginItem[];
 }
 
-class Service {
+class Service<T extends IConfiguration = Record<string, any>> {
   readonly cwd: string;
   readonly env: string;
   readonly customEnv: string | undefined;
@@ -29,10 +39,10 @@ class Service {
   methods: Record<string, Function[]> = {};
   plugins: Record<string, IPlugin> = {};
   commands: Record<string, ICommand> = {};
-  userConfig: Record<string, any> = {};
-  config: Record<string, any> = {};
+  userConfig = {} as T;
+  config = {} as T;
   stage: ServiceStage = ServiceStage.uninitialized;
-  configService: ConfigService;
+  configProvider: IConfigProvider<T>;
   pkgPath: string = "";
   pkg: {
     name?: string;
@@ -42,17 +52,19 @@ class Service {
     [key: string]: any;
   } = {};
 
-  constructor(options?: IServiceOptions) {
-    this.cwd = options?.cwd ?? process.cwd();
-    this.env = options?.env ?? process.env.NODE_ENV ?? "production";
+  constructor(readonly options?: IServiceOptions<T>) {
+    this.cwd = options?.cwd || process.cwd();
+    this.env = options?.env || DEFAULT_NODE_ENV;
     this.frameworkName = options?.frameworkName || DEFAULT_FRAMEWORK_NAME;
     this.customEnv = process.env[`${this.frameworkName}_ENV`.toUpperCase()];
-    this.configService = new ConfigService({
-      cwd: this.cwd,
-      env: this.env,
-      customEnv: this.customEnv,
-      name: this.frameworkName,
-    });
+    this.configProvider =
+      options?.configProvider ||
+      new DefaultConfigProvider({
+        cwd: this.cwd,
+        env: this.env,
+        customEnv: this.customEnv,
+        name: this.frameworkName,
+      });
 
     // load pkg
     this.pkgPath = join(this.cwd, "package.json");
@@ -67,21 +79,22 @@ class Service {
     if (args._[0] === name) {
       args._.shift();
     }
-    this.subcommand = options.name;
-    this.args = options.args;
+    this.subcommand = name;
+    this.args = args;
 
     this.stage = ServiceStage.init;
     // load dotEnv
     loadEnv({ cwd: this.cwd, env: this.env, envFile: ".env", customEnv: this.customEnv });
 
     // load configFile
-    this.userConfig = this.configService.getUserConfig();
+    this.userConfig = this.configProvider.getUserConfig();
 
     // load plugins
     const plugins = PluginAPI.resolvePlugins({
       cwd: this.cwd,
-      plugins: this.userConfig.plugins || [],
+      plugins: [...(this.options?.plugins || []), ...(this.userConfig.plugins || [])],
     });
+
     this.stage = ServiceStage.initPlugins;
     while (plugins.length) {
       await this.walkPlugin({
@@ -107,7 +120,7 @@ class Service {
     this.stage = ServiceStage.resolveConfig;
     this.config = await this.applyPlugins({
       name: "modifyConfig",
-      initialValue: this.configService.getUserConfig(),
+      initialValue: this.configProvider.getUserConfig(),
     });
 
     this.stage = ServiceStage.onStart;
@@ -115,6 +128,7 @@ class Service {
       name: "onStart",
     });
 
+    this.stage = ServiceStage.runCommand;
     return command.apply({ args });
   }
 
@@ -188,7 +202,7 @@ class Service {
     }
   }
 
-  async walkPlugin(opts: {
+  private async walkPlugin(opts: {
     current: IPlugin;
     plugins: IPlugin[];
   }) {
@@ -203,7 +217,9 @@ class Service {
     });
     // @ts-ignore
     api.registerPlugins = api.registerPlugins.bind(api, opts.plugins);
-    const proxyAPI = api.proxy({
+    const proxyAPI = PluginAPI.proxy({
+      api,
+      service: this,
       serviceProps: [
         "cwd",
         "env",
@@ -231,7 +247,7 @@ class Service {
     opts.plugins.unshift(...needAddPlugins);
   }
 
-  protected printHelp(subCommand: string) {
+  printHelp(subCommand?: string) {
     if (subCommand) {
       if (subCommand in this.commands) {
         showHelp.call(this, this.commands[subCommand]);
@@ -243,11 +259,11 @@ class Service {
     }
   }
 
-  protected printFrameworkInfo() {
+  printFrameworkInfo() {
     console.log(`${"🤡"} ${colorette.magentaBright(this.frameworkName)} v${this.pkg.version}`);
   }
 
-  protected printVersion() {
+  printVersion() {
     const { version } = this.pkg;
     console.log();
     console.log(version);

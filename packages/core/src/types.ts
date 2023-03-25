@@ -1,4 +1,3 @@
-import joi from "joi";
 import { PluginAPI } from "./pluginAPI";
 import type { Service } from "./service";
 
@@ -7,8 +6,6 @@ export enum ServiceStage {
   init,
   initPlugins,
   resolveConfig,
-  collectAppData,
-  onCheck,
   onStart,
   runCommand,
 }
@@ -96,19 +93,26 @@ export interface IAdd<T, U> {
   }): void;
 }
 
-export type PluginOptsSchemaValidateFn = (joi: joi.Root) => joi.Schema;
-export interface IApi {
+export interface IPluginAPI<T extends IConfiguration = IConfiguration>
+  extends Pick<
+    PluginAPI,
+    "register" | "registerCommand" | "registerMethod" | "addPluginOptsSchema"
+  > {
   cwd: typeof Service.prototype.cwd;
   env: typeof Service.prototype.env;
   subcommand: typeof Service.prototype.subcommand;
   args: typeof Service.prototype.args;
-  userConfig: typeof Service.prototype.userConfig;
-  service: Service;
-  register: typeof PluginAPI.prototype.register;
-  registerMethod: typeof PluginAPI.prototype.registerMethod;
-  registerPlugins(plugins: Parameters<typeof PluginAPI.prototype.registerPlugins>[1]): void;
-  registerCommand: typeof PluginAPI.prototype.registerCommand;
-  addPluginOptsSchema: typeof PluginAPI.prototype.addPluginOptsSchema;
+  userConfig: T;
+  config: T;
+  pkg: typeof Service.prototype.pkg;
+  pkgPath: typeof Service.prototype.pkgPath;
+  ServiceStage: ServiceStage;
+  service: Service<T>;
+  registerPlugins(plugins: PluginItem[]): void;
   onStart: IEvent<null>;
-  modifyConfig: IModify<typeof Service.prototype.config, null>;
+  modifyConfig: IModify<T, null>;
+}
+
+export interface IConfiguration {
+  plugins?: PluginItem[];
 }

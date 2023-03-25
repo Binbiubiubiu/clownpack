@@ -1,5 +1,5 @@
 {
-  "name": "@clownpack/cli",
+  "name": "@clownpack/webpack",
   "version": "0.0.0",
   "description": "A bundle build tool",
   "keywords": [],
@@ -7,30 +7,32 @@
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "bin": {
-    "clownpack": "bin/clownpack.js"
-  },
   "files": [
-    "dist",
-    "bin"
+    "dist"
   ],
   "scripts": {
-    "build": "pnpm clean && tsc",
-    "dev": "pnpm build --watch",
-    "clean": "rimraf ./dist",
-    "play": "pnpm build && pnpm --filter=playground run clownpack "
+    "build": "tsc"
   },
   "dependencies": {
-    "v8-compile-cache": "^2.3.0",
-    "yargs-parser": "^21.1.1",
-    "@clownpack/core": "workspace:*",
-    "@clownpack/helper": "workspace:*"
+    "@babel/core": "^7.21.3",
+    "@babel/preset-typescript": "^7.21.0",
+    "@svgr/webpack": "^7.0.0",
+    "autoprefixer": "^10.4.14",
+    "babel-loader": "^9.1.2",
+    "cssnano": "^5.1.15",
+    "cssnano-preset-default": "^5.2.14",
+    "less": "^4.1.3",
+    "less-loader": "^11.1.0",
+    "postcss": "^8.4.21",
+    "postcss-import": "^15.1.0",
+    "postcss-loader": "^7.1.0",
+    "postcss-url": "^10.1.3",
+    "webpack-chain": "^6.5.1"
+  },
+  "devDependencies": {
+    "@clownpack/core": "workspace:*"
   },
   "packageManager": "pnpm@7.24.2",
-  "engines": {
-    "node": ">=14",
-    "pnpm": ">=7"
-  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"

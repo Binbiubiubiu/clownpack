@@ -1,4 +1,4 @@
-import type { IApi, IRpConfig } from "clownpack";
+import type { IApi, Configuration } from "@clownpack/cli";
 
 export default (api: IApi) => {
   api.addPluginOptsSchema((joi) => {
@@ -9,7 +9,7 @@ export default (api: IApi) => {
   api.onStart(() => {
     console.log("onStart");
   });
-  api.modifyConfig((initialValue: IRpConfig) => {
+  api.modifyConfig((initialValue: Configuration) => {
     return initialValue;
   });
 };

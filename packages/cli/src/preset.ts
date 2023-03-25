@@ -1,7 +1,7 @@
-import { IApi } from "@clownpack/service";
+import { IApi } from "./types";
 
 export default (api: IApi) => {
   return {
-    plugins: [require.resolve("./commands/dev.ts"), require.resolve("./commands/build.ts")],
+    plugins: [require.resolve("./commands/dev"), require.resolve("./commands/build")],
   };
 };

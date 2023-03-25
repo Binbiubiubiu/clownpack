@@ -1,5 +1,5 @@
 {
-  "name": "@clownpack/service",
+  "name": "@clownpack/core",
   "version": "0.0.0",
   "description": "A bundle build tool",
   "keywords": [],
@@ -24,5 +24,13 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Binbiubiubiu/clownpack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Binbiubiubiu/clownpack/issues"
+  },
+  "homepage": "https://github.com/Binbiubiubiu/clownpack#readme"
 }

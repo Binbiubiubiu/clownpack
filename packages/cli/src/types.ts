@@ -1,4 +1,4 @@
-import type { PluginItem, IApi as IBaseApi } from "@clownpack/service";
+import type { PluginItem, IPluginAPI, IConfiguration } from "@clownpack/core";
 
 export enum Env {
   development = "development",
@@ -6,8 +6,10 @@ export enum Env {
   test = "test",
 }
 
-export interface IClownConfig {
+export interface Configuration extends IConfiguration {
   plugins?: PluginItem[];
 }
 
-export interface IApi extends IBaseApi {}
+export interface IApi extends IPluginAPI<Configuration> {
+  executor: string;
+}

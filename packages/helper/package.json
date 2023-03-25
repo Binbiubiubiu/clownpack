@@ -28,5 +28,13 @@
   },
   "devDependencies": {
     "@types/yargs-parser": "^21.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Binbiubiubiu/clownpack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Binbiubiubiu/clownpack/issues"
+  },
+  "homepage": "https://github.com/Binbiubiubiu/clownpack#readme"
 }
