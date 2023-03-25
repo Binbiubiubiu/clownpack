@@ -1,0 +1,28 @@
+{
+  "name": "@clownpack/service",
+  "version": "0.0.0",
+  "description": "A bundle build tool",
+  "keywords": [],
+  "author": "Binbiubiubiu <2632003786@qq.com>",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "dotenv-expand": "^10.0.0",
+    "joi": "^17.9.1",
+    "tapable": "^2.2.1",
+    "@clownpack/helper": "workspace:*"
+  },
+  "packageManager": "pnpm@7.24.2",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

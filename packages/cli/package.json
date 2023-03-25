@@ -1,0 +1,38 @@
+{
+  "name": "@clownpack/cli",
+  "version": "0.0.0",
+  "description": "A bundle build tool",
+  "keywords": [],
+  "author": "Binbiubiubiu <2632003786@qq.com>",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "clownpack": "bin/clownpack.js"
+  },
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "scripts": {
+    "build": "pnpm clean && tsc",
+    "dev": "pnpm build --watch",
+    "clean": "rimraf ./dist",
+    "play": "pnpm build && pnpm --filter=playground run clownpack "
+  },
+  "dependencies": {
+    "v8-compile-cache": "^2.3.0",
+    "yargs-parser": "^21.1.1",
+    "@clownpack/service": "workspace:*",
+    "@clownpack/helper": "workspace:*"
+  },
+  "packageManager": "pnpm@7.24.2",
+  "engines": {
+    "node": ">=14",
+    "pnpm": ">=7"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
