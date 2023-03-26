@@ -13,7 +13,8 @@ export default (api: IApi) => {
         if (command in service.commands) {
           showHelp.call(service, command);
         } else {
-          console.log(`Unknown command ${command}.`);
+          console.log();
+          console.log(`Unknown command ${colorette.blueBright(command)}.`);
         }
       } else {
         showHelps.call(service);

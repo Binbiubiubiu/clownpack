@@ -6,10 +6,10 @@ import { LOCAL_EXT, SHORT_ENV } from "./constants";
 
 export { localEnvSuffix, loadEnv };
 
-const localEnvSuffix = (opts: {
+function localEnvSuffix(opts: {
   env: string;
   customEnv?: string;
-}) => {
+}) {
   const filePaths: string[] = [LOCAL_EXT];
   const addFile = (name: string) => {
     filePaths.push(name, `${name}${LOCAL_EXT}`);
@@ -21,14 +21,14 @@ const localEnvSuffix = (opts: {
   SHORT_ENV[opts.env] && opts.customEnv && addFile(`.${SHORT_ENV[opts.env]}.${opts.customEnv}`);
 
   return filePaths;
-};
+}
 
-const loadEnv = (opts: {
+function loadEnv(opts: {
   cwd: string;
   envFile: string;
   env: string;
   customEnv?: string;
-}) => {
+}) {
   const { cwd, envFile, env, customEnv } = opts;
   const files = [
     join(cwd, envFile),
@@ -42,4 +42,4 @@ const loadEnv = (opts: {
       process.env[key] = parsed[key];
     }
   }
-};
+}

@@ -1,8 +1,7 @@
-import type { yParser } from "@clownpack/helper";
 import { AsyncSeriesWaterfallHook } from "tapable";
 import { join } from "path";
 import assert from "assert";
-import { colorette } from "@clownpack/helper";
+import { colorette, resolveSync, type yParser } from "@clownpack/helper";
 import { loadEnv } from "./utils";
 import {
   ApplyPluginsType,
@@ -101,7 +100,7 @@ class Service<T extends IConfiguration = Record<string, any>> {
     const plugins = PluginAPI.resolvePlugins({
       cwd: this.cwd,
       plugins: [
-        require.resolve("./preset"),
+        resolveSync("./preset"),
         ...(this.options.plugins || []),
         ...(this.userConfig.plugins || []),
       ],
@@ -116,9 +115,11 @@ class Service<T extends IConfiguration = Record<string, any>> {
     }
 
     const commandImpl = this.commands[this.command];
-    if (!commandImpl) {
-      throw Error(`Invalid command ${colorette.redBright(this.command)}, it's not registered.`);
-    }
+
+    assert(
+      commandImpl,
+      `Invalid command ${colorette.redBright(this.command)}, it's not registered.`,
+    );
 
     this.stage = ServiceStage.resolveConfig;
     this.config = await this.applyPlugins({

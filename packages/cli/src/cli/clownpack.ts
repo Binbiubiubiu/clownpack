@@ -1,10 +1,12 @@
-import { yParser } from "@clownpack/helper";
+import { Trace, yParser } from "@clownpack/helper";
 import { Service } from "@clownpack/core";
 import { CliCmd, FRAMEWORK_NAME } from "../constants";
 import { type Configuration, Env } from "../types";
 import { printFrameworkInfo } from "./utils";
 
 export async function run() {
+  Trace.init(FRAMEWORK_NAME);
+
   const args = yParser(process.argv.slice(2));
 
   let command = `${args._[0] ?? ""}`;
