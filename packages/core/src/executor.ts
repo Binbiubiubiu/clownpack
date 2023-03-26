@@ -1,4 +1,4 @@
-import { IConfiguration } from "./types";
+import type { IConfiguration } from "./types";
 
 export interface IExecutor<R> {
   build(opts: {

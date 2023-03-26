@@ -1,4 +1,4 @@
-import { IApi } from "../types";
+import type { IApi } from "../types";
 import { colorette } from "@clownpack/helper";
 import type { Service, IConfiguration } from "@clownpack/core";
 

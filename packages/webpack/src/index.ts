@@ -1,4 +1,4 @@
-import { IConfiguration } from "@clownpack/core";
+import type { IConfiguration } from "@clownpack/core";
 import Config from "webpack-chain";
 import webpack from "webpack";
 

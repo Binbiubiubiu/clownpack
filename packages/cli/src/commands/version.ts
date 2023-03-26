@@ -1,5 +1,5 @@
 import { FRAMEWORK_VERSION } from "../constants";
-import { IApi } from "../types";
+import type { IApi } from "../types";
 
 export default (api: IApi) => {
   api.registerCommand({

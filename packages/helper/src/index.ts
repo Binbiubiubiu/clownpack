@@ -40,6 +40,5 @@ const getModuleAbsPath = (opts: { name: string; cwd?: string; type?: string } | 
 };
 
 function importLazy<R = any>(name: string, opts?: { cwd?: string }): Promise<R> {
-  const paths = [opts?.cwd ?? process.cwd()];
-  return import(require.resolve(name, { paths }));
+  return import(resolve.sync(name, { basedir: opts?.cwd ?? process.cwd() }));
 }

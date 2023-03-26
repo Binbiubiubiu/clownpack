@@ -11,9 +11,9 @@ import {
   type ICommand,
   type IHook,
   type IConfiguration,
-  PluginItem,
+  type PluginItem,
 } from "./types";
-import { DefaultConfigProvider, IConfigProvider } from "./config";
+import { DefaultConfigProvider, type IConfigProvider } from "./config";
 import { PluginAPI } from "./pluginAPI";
 import { DEFAULT_NODE_ENV } from "./constants";
 

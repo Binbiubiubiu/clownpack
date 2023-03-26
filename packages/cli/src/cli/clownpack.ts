@@ -1,7 +1,7 @@
 import { yParser } from "@clownpack/helper";
 import { Service } from "@clownpack/core";
 import { CliCmd, FRAMEWORK_NAME } from "../constants";
-import type { Configuration } from "../types";
+import { type Configuration, Env } from "../types";
 import { printFrameworkInfo } from "./utils";
 
 export async function run() {
@@ -11,11 +11,11 @@ export async function run() {
 
   switch (command) {
     case CliCmd.dev:
-      process.env.NODE_ENV = "development";
+      process.env.NODE_ENV = Env.development;
       break;
     case CliCmd.build:
     case CliCmd.prebundle:
-      process.env.NODE_ENV = "production";
+      process.env.NODE_ENV = Env.production;
   }
 
   const service = new Service<Configuration>({

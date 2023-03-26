@@ -8,7 +8,14 @@ import {
   colorette,
 } from "@clownpack/helper";
 import type { Service } from "./service";
-import { IPlugin, PluginItem, ICommand, IHook, Func, ServiceStage } from "./types";
+import {
+  type IPlugin,
+  type PluginItem,
+  type ICommand,
+  type IHook,
+  type Func,
+  ServiceStage,
+} from "./types";
 
 interface IPluginAPIOptions {
   plugin: IPlugin;

@@ -1,19 +1,18 @@
 import { PluginAPI } from "./pluginAPI";
 import type { Service } from "./service";
 
-export {
-  ServiceStage,
-  ApplyPluginsType,
-  type Func,
-  type PluginItem,
-  type IPlugin,
-  type IHook,
-  type ICommand,
-  type IEvent,
-  type IModify,
-  type IAdd,
-  type IPluginAPI,
-  type IConfiguration,
+export { ServiceStage, ApplyPluginsType };
+export type {
+  Func,
+  PluginItem,
+  IPlugin,
+  IHook,
+  ICommand,
+  IEvent,
+  IModify,
+  IAdd,
+  IPluginAPI,
+  IConfiguration,
 };
 
 enum ServiceStage {
