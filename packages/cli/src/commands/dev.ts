@@ -4,8 +4,8 @@ export default (api: IApi) => {
   api.registerCommand({
     name: "dev",
     description: "Start build in watch mode",
-    apply: ({ args }) => {
-      console.log(args);
+    apply: () => {
+      console.log(api.args);
     },
   });
 };

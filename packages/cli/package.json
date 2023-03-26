@@ -1,6 +1,6 @@
 {
   "name": "@clownpack/cli",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A bundle build tool",
   "keywords": [],
   "author": "Binbiubiubiu <2632003786@qq.com>",
@@ -21,10 +21,21 @@
     "play": "pnpm build && pnpm --filter=playground run clownpack "
   },
   "dependencies": {
-    "v8-compile-cache": "^2.3.0",
-    "yargs-parser": "^21.1.1",
     "@clownpack/core": "workspace:*",
-    "@clownpack/helper": "workspace:*"
+    "@clownpack/helper": "workspace:*",
+    "v8-compile-cache": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@clownpack/rspack": "workspace:*",
+    "@clownpack/webpack": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@clownpack/webpack": {
+      "optional": true
+    },
+    "@clownpack/rspack": {
+      "optional": true
+    }
   },
   "packageManager": "pnpm@7.24.2",
   "engines": {

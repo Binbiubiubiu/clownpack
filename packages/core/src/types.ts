@@ -1,7 +1,22 @@
 import { PluginAPI } from "./pluginAPI";
 import type { Service } from "./service";
 
-export enum ServiceStage {
+export {
+  ServiceStage,
+  ApplyPluginsType,
+  type Func,
+  type PluginItem,
+  type IPlugin,
+  type IHook,
+  type ICommand,
+  type IEvent,
+  type IModify,
+  type IAdd,
+  type IPluginAPI,
+  type IConfiguration,
+};
+
+enum ServiceStage {
   uninitialized,
   init,
   initPlugins,
@@ -10,16 +25,16 @@ export enum ServiceStage {
   runCommand,
 }
 
-export enum ApplyPluginsType {
+enum ApplyPluginsType {
   add = "add",
   modify = "modify",
   event = "event",
 }
 
-export type Func = (...args: any[]) => any;
-export type PluginItem = string | [string, Record<string, any>];
+type Func = (...args: any[]) => any;
+type PluginItem = string | [string, Record<string, any>];
 
-export interface IPlugin {
+interface IPlugin {
   // the plugin's name in the userConfig
   name: string;
   // absolute path
@@ -28,7 +43,7 @@ export interface IPlugin {
   apply: () => (api: PluginAPI) => { plugins: PluginItem[] } | void;
 }
 
-export interface IHook {
+interface IHook {
   name: string;
   apply: Func;
   pluginId: string;
@@ -36,7 +51,7 @@ export interface IHook {
   before?: string;
 }
 
-export interface ICommand {
+interface ICommand {
   name: string;
   apply: Func;
   alias?: string | string[];
@@ -47,7 +62,7 @@ export interface ICommand {
   isAlias?: boolean;
 }
 
-export interface IEvent<T> {
+interface IEvent<T> {
   (fn: { (args: T): void }): void;
   (args: {
     fn: { (args: T): void };
@@ -57,7 +72,7 @@ export interface IEvent<T> {
   }): void;
 }
 
-export interface IModify<T, U> {
+interface IModify<T, U> {
   (fn: { (initialValue: T, args: U): T }): void;
   (fn: { (initialValue: T, args: U): Promise<T> }): void;
   (args: {
@@ -74,7 +89,7 @@ export interface IModify<T, U> {
   }): void;
 }
 
-export interface IAdd<T, U> {
+interface IAdd<T, U> {
   (fn: { (args: T): U | U[] }): void;
   (fn: { (args: T): Promise<U | U[]> }): void;
   (args: {
@@ -93,14 +108,14 @@ export interface IAdd<T, U> {
   }): void;
 }
 
-export interface IPluginAPI<T extends IConfiguration = IConfiguration>
+interface IPluginAPI<T extends IConfiguration = IConfiguration>
   extends Pick<
     PluginAPI,
     "register" | "registerCommand" | "registerMethod" | "addPluginOptsSchema"
   > {
   cwd: typeof Service.prototype.cwd;
   env: typeof Service.prototype.env;
-  subcommand: typeof Service.prototype.subcommand;
+  command: typeof Service.prototype.command;
   args: typeof Service.prototype.args;
   userConfig: T;
   config: T;
@@ -113,6 +128,6 @@ export interface IPluginAPI<T extends IConfiguration = IConfiguration>
   modifyConfig: IModify<T, null>;
 }
 
-export interface IConfiguration {
+interface IConfiguration {
   plugins?: PluginItem[];
 }

@@ -11,6 +11,7 @@ export {
   createEsbuildRegister,
   getModuleAbsPath,
   getModuleDefaultExport,
+  importLazy,
 };
 
 const merge: ReturnType<typeof deepmerge> = deepmerge();
@@ -37,3 +38,8 @@ const getModuleAbsPath = (opts: { name: string; cwd?: string; type?: string } | 
     throw new Error(`Invalid ${opts.type ?? "module"} "${opts.name}", can not be resolved.`);
   }
 };
+
+function importLazy<R = any>(name: string, opts?: { cwd?: string }): Promise<R> {
+  const paths = [opts?.cwd ?? process.cwd()];
+  return import(require.resolve(name, { paths }));
+}

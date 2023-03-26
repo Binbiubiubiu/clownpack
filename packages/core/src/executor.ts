@@ -1,7 +1,7 @@
 import { IConfiguration } from "./types";
 
 export interface IExecutor<R> {
-  (opts: {
+  build(opts: {
     userConfig: IConfiguration;
     cwd: string;
     env: string;

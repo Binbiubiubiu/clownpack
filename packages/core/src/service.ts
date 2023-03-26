@@ -3,7 +3,7 @@ import { AsyncSeriesWaterfallHook } from "tapable";
 import { join } from "path";
 import assert from "assert";
 import { colorette } from "@clownpack/helper";
-import { loadEnv } from "../utils";
+import { loadEnv } from "./utils";
 import {
   ApplyPluginsType,
   ServiceStage,
@@ -12,18 +12,17 @@ import {
   type IHook,
   type IConfiguration,
   PluginItem,
-} from "../types";
-import { DefaultConfigProvider, IConfigProvider } from "../config";
-import { PluginAPI } from "../pluginAPI";
-import { DEFAULT_FRAMEWORK_NAME, DEFAULT_NODE_ENV } from "../constants";
-import { showHelp, showHelps } from "./console";
+} from "./types";
+import { DefaultConfigProvider, IConfigProvider } from "./config";
+import { PluginAPI } from "./pluginAPI";
+import { DEFAULT_NODE_ENV } from "./constants";
 
 export { Service };
 
 interface IServiceOptions<T> {
+  frameworkName: string;
   cwd?: string;
   env?: string;
-  frameworkName?: string;
   configProvider?: IConfigProvider<T>;
   plugins?: PluginItem[];
 }
@@ -32,7 +31,7 @@ class Service<T extends IConfiguration = Record<string, any>> {
   readonly cwd: string;
   readonly env: string;
   readonly customEnv: string | undefined;
-  subcommand: string = "";
+  command: string = "";
   frameworkName: string = "";
   args: yParser.Arguments = { _: [], $0: "" };
   hooks: Record<string, IHook[]> = {};
@@ -51,14 +50,21 @@ class Service<T extends IConfiguration = Record<string, any>> {
     devDependencies?: Record<string, string>;
     [key: string]: any;
   } = {};
+  options: IServiceOptions<T>;
 
-  constructor(readonly options?: IServiceOptions<T>) {
-    this.cwd = options?.cwd || process.cwd();
-    this.env = options?.env || DEFAULT_NODE_ENV;
-    this.frameworkName = options?.frameworkName || DEFAULT_FRAMEWORK_NAME;
+  constructor(opts: string | IServiceOptions<T>) {
+    if (typeof opts === "string") {
+      opts = {
+        frameworkName: opts,
+      };
+    }
+    this.options = opts;
+    this.cwd = this.options.cwd || process.cwd();
+    this.env = this.options.env || DEFAULT_NODE_ENV;
+    this.frameworkName = this.options.frameworkName;
     this.customEnv = process.env[`${this.frameworkName}_ENV`.toUpperCase()];
     this.configProvider =
-      options?.configProvider ||
+      this.options.configProvider ||
       new DefaultConfigProvider({
         cwd: this.cwd,
         env: this.env,
@@ -73,13 +79,15 @@ class Service<T extends IConfiguration = Record<string, any>> {
     } catch (e) {}
   }
 
-  async run(options: { name: string; args: yParser.Arguments }) {
-    const { name, args } = options;
+  async run(options: { command: string; args: yParser.Arguments }) {
+    const { command, args } = options;
     args._ ||= [];
-    if (args._[0] === name) {
+    // e.g: remove help command
+    if (args._[0] === command) {
       args._.shift();
     }
-    this.subcommand = name;
+
+    this.command = command;
     this.args = args;
 
     this.stage = ServiceStage.init;
@@ -92,7 +100,11 @@ class Service<T extends IConfiguration = Record<string, any>> {
     // load plugins
     const plugins = PluginAPI.resolvePlugins({
       cwd: this.cwd,
-      plugins: [...(this.options?.plugins || []), ...(this.userConfig.plugins || [])],
+      plugins: [
+        require.resolve("./preset"),
+        ...(this.options.plugins || []),
+        ...(this.userConfig.plugins || []),
+      ],
     });
 
     this.stage = ServiceStage.initPlugins;
@@ -103,18 +115,9 @@ class Service<T extends IConfiguration = Record<string, any>> {
       });
     }
 
-    // some options
-    this.printFrameworkInfo();
-    if (this.args.version || this.args.v || this.subcommand === "version") {
-      return this.printVersion();
-    } else if (this.args.help || this.args.h || this.subcommand === "help" || !this.subcommand) {
-      this.subcommand = `${this.args._[1] || ""}`;
-      return this.printHelp(this.subcommand);
-    }
-
-    const command = this.commands[this.subcommand];
-    if (!command) {
-      throw Error(`Invalid command ${colorette.redBright(this.subcommand)}, it's not registered.`);
+    const commandImpl = this.commands[this.command];
+    if (!commandImpl) {
+      throw Error(`Invalid command ${colorette.redBright(this.command)}, it's not registered.`);
     }
 
     this.stage = ServiceStage.resolveConfig;
@@ -129,7 +132,7 @@ class Service<T extends IConfiguration = Record<string, any>> {
     });
 
     this.stage = ServiceStage.runCommand;
-    return command.apply({ args });
+    return commandImpl.apply();
   }
 
   async applyPlugins(opts: {
@@ -163,7 +166,7 @@ class Service<T extends IConfiguration = Record<string, any>> {
             },
             async (memo: any) => {
               const res = await hook.apply(opts.args);
-              memo.push(res);
+              memo = memo.concat(res);
               return memo;
             },
           );
@@ -223,7 +226,7 @@ class Service<T extends IConfiguration = Record<string, any>> {
       serviceProps: [
         "cwd",
         "env",
-        "subcommand",
+        "command",
         "args",
         "userConfig",
         "config",
@@ -244,29 +247,8 @@ class Service<T extends IConfiguration = Record<string, any>> {
       cwd: this.cwd,
       plugins: ret?.plugins,
     });
-    opts.plugins.unshift(...needAddPlugins);
-  }
-
-  printHelp(subCommand?: string) {
-    if (subCommand) {
-      if (subCommand in this.commands) {
-        showHelp.call(this, this.commands[subCommand]);
-      } else {
-        console.log(`Unknown subcommand ${subCommand}.`);
-      }
-    } else {
-      showHelps.call(this);
+    if (needAddPlugins.length) {
+      opts.plugins.unshift(...needAddPlugins);
     }
-  }
-
-  printFrameworkInfo() {
-    console.log(`${"🤡"} ${colorette.magentaBright(this.frameworkName)} v${this.pkg.version}`);
-  }
-
-  printVersion() {
-    const { version } = this.pkg;
-    console.log();
-    console.log(version);
-    return version;
   }
 }

@@ -1,15 +1,17 @@
 import type { IApi, Configuration } from "@clownpack/cli";
 
 export default (api: IApi) => {
-  api.addPluginOptsSchema((joi) => {
-    return joi.object({
-      name: joi.string(),
+  api.addPluginOptsSchema((z) => {
+    return z.object({
+      name: z.string(),
     });
   });
   api.onStart(() => {
-    console.log("onStart");
+    // console.log("onStart");
   });
-  api.modifyConfig((initialValue: Configuration) => {
-    return initialValue;
+
+  api.modifyConfig((config: Configuration) => {
+    // console.log(config);
+    return config;
   });
 };

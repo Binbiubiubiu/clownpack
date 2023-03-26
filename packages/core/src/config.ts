@@ -10,6 +10,7 @@ interface IConfigOptions {
   env: string;
   customEnv?: string;
   exts: string[];
+  defaultConfigFiles?: string[] | ((ext: string) => string);
 }
 
 export interface IConfigProvider<T> {
@@ -49,8 +50,12 @@ export class DefaultConfigProvider<T> implements IConfigProvider<T> {
   }
 
   getConfigFiles(): string[] {
-    const { env, cwd, name, customEnv, exts = DEFAULT_CONFIG_EXTENSIONS } = this.options;
-    const defaultConfigFiles = exts.map((ext) => `${name}.config${ext}`);
+    const { env, cwd, name, customEnv, exts, defaultConfigFiles: dfs } = this.options;
+    const resolveDefaultConfigFile =
+      typeof dfs === "function" ? dfs : (ext: string) => `${name}.config${ext}`;
+    const defaultConfigFiles = Array.isArray(dfs)
+      ? dfs
+      : exts.map((ext) => resolveDefaultConfigFile(ext));
     for (const configFile of defaultConfigFiles) {
       const absConfigPath = join(cwd, configFile);
       if (existsSync(absConfigPath)) {

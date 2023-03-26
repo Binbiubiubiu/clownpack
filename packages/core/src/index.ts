@@ -4,7 +4,15 @@ export { type IExecutor } from "./executor";
 
 export {
   ServiceStage,
+  ApplyPluginsType,
+  type Func,
   type PluginItem,
+  type IPlugin,
+  type IHook,
+  type ICommand,
+  type IEvent,
+  type IModify,
+  type IAdd,
   type IPluginAPI,
   type IConfiguration,
 } from "./types";

@@ -1,5 +1,5 @@
 import assert from "assert";
-import joi from "joi";
+import zod from "zod";
 
 import {
   createEsbuildRegister,
@@ -18,7 +18,7 @@ interface IPluginAPIOptions {
 export class PluginAPI {
   service: Service;
   plugin: IPlugin;
-  optsSchema: ((joi: joi.Root) => joi.Schema) | null = null;
+  optsSchema: ((z: typeof zod) => zod.Schema) | null = null;
   constructor(options: IPluginAPIOptions) {
     this.service = options.service;
     this.plugin = options.plugin;
@@ -48,11 +48,11 @@ export class PluginAPI {
       }`,
     );
     let { alias } = cmd;
-    // delete cmd.alias;
     this.service.commands[cmd.name] = {
       ...cmd,
       pluginId: this.plugin.id,
     };
+    delete cmd.alias;
     if (alias) {
       if (typeof alias === "string") {
         alias = [alias];
@@ -93,10 +93,10 @@ export class PluginAPI {
     this.service.methods[opts.name] ||= [];
     this.service.methods[opts.name].push(
       opts.fn ||
-        function (this: PluginAPI, applyFn: Func) {
+        function (this: PluginAPI, apply: Func) {
           this.register({
             name: opts.name,
-            apply: applyFn,
+            apply,
           });
         },
     );
@@ -113,13 +113,13 @@ export class PluginAPI {
     extraProps: Record<string, any>;
   }) {
     return new Proxy(opts.api, {
-      get: (target, key: string, receiver) => {
+      get(target, key: string, receiver) {
         const methods = opts.service.methods[key];
         if (methods) {
           if (Array.isArray(methods)) {
             return (...args: any[]) => {
               methods.forEach((cb) => {
-                cb.apply(this, args);
+                cb.apply(target, args);
               });
             };
           }
@@ -187,14 +187,22 @@ export class PluginAPI {
   }
 
   static checkPluginOpts(plugin: IPlugin, generator: typeof PluginAPI.prototype.optsSchema) {
-    const schema = generator?.(joi);
+    const schema = generator?.(zod);
     if (schema) {
       assert(
-        joi.isSchema(schema),
+        isZodSchema(schema),
         `The schema configuration of the plugin ${colorette.redBright(plugin.name)} is incorrect.`,
       );
-      const { error } = schema.validate(plugin.options);
-      assert(!error, `Incorrect options for the plugin ${colorette.redBright(plugin.name)}`);
+      const { success } = schema.safeParse(plugin.options);
+      assert(success, `Incorrect options for the plugin ${colorette.redBright(plugin.name)}`);
     }
   }
 }
+
+const isZodSchema = async (schema: any) => {
+  try {
+    return "safeParse" in schema;
+  } catch (_) {
+    return false;
+  }
+};

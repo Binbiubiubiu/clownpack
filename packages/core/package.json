@@ -14,11 +14,11 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@clownpack/helper": "workspace:*",
     "dotenv": "^16.0.3",
     "dotenv-expand": "^10.0.0",
-    "joi": "^17.9.1",
     "tapable": "^2.2.1",
-    "@clownpack/helper": "workspace:*"
+    "zod": "^3.21.4"
   },
   "packageManager": "pnpm@7.24.2",
   "publishConfig": {

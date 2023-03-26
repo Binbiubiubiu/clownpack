@@ -12,7 +12,7 @@
     "lint": "rome ci .",
     "format": "rome format --write . && prettier --write .",
     "clean": "rimraf --glob  .turbo ./node_modules/.cache/turbo ./packages/*/{.turbo,dist,coverage,*.lcov}",
-    "play": "pnpm --filter=playground run clownpack ",
+    "play": "pnpm build && pnpm --filter=playground run clownpack ",
     "release": "pnpm build && changeset publish",
     "publish-packages": "pnpm build && changeset version && changeset publish",
     "preinstall": "npx only-allow pnpm",
