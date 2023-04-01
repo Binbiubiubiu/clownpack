@@ -1,6 +1,5 @@
-import type { IApi } from "../types";
+import type { Env, IApi } from "../types";
 import { importLazy } from "@clownpack/helper";
-import type { IExecutor } from "@clownpack/core";
 
 export default (api: IApi) => {
   api.registerCommand({
@@ -8,15 +7,31 @@ export default (api: IApi) => {
     alias: ["b"],
     description: "Build the current package",
     apply: () => {
-      importLazy<IExecutor<any>>(`@clownpack/${api.config.executor}`, { cwd: api.cwd }).then(
+      importLazy<typeof import("@clownpack/webpack")>("@clownpack/webpack", { cwd: api.cwd }).then(
         (executor) => {
           executor.build({
-            env: api.env,
+            entry: {},
+            module: "esm",
             cwd: api.cwd,
-            userConfig: api.config,
+            env: api.env as `${Env}`,
+            clean: true,
           });
         },
       );
+
+      // api["build:webpack"]({
+      //   env: api.env,
+      //   cwd: api.cwd,
+      //   userConfig: api.config,
+      // });
+      // api.applyPlugins({
+      //   name: "onWebapckBuild",
+      //   args: {
+      //     env: api.env,
+      //     cwd: api.cwd,
+      //     userConfig: api.config,
+      //   },
+      // });
     },
   });
 };

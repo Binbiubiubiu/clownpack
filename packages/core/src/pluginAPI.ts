@@ -7,6 +7,8 @@ import {
   getModuleDefaultExport,
   colorette,
 } from "@clownpack/helper";
+
+import { fromZodError } from "zod-validation-error";
 import type { Service } from "./service";
 import {
   type IPlugin,
@@ -15,6 +17,7 @@ import {
   type IHook,
   type Func,
   ServiceStage,
+  ApplyPluginsType,
 } from "./types";
 
 interface IPluginAPIOptions {
@@ -147,7 +150,7 @@ export class PluginAPI {
   }
 
   static getPresetOrPluginMap(items: PluginItem[]) {
-    let map: Record<string, any> = {};
+    const map: Record<string, any> = {};
     if (Array.isArray(items)) {
       for (const item of items) {
         if (typeof item === "string") {
@@ -200,8 +203,15 @@ export class PluginAPI {
         isZodSchema(schema),
         `The schema configuration of the plugin ${colorette.redBright(plugin.name)} is incorrect.`,
       );
-      const { success } = schema.safeParse(plugin.options);
-      assert(success, `Incorrect options for the plugin ${colorette.redBright(plugin.name)}`);
+      const output = schema.safeParse(plugin.options);
+      if (!output.success) {
+        console.log(
+          `Incorrect options for the plugin ${colorette.redBright(plugin.name)}.\n${fromZodError(
+            output.error,
+          )}`,
+        );
+        process.exit(1);
+      }
     }
   }
 }

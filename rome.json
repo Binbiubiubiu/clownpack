@@ -9,9 +9,13 @@
       },
       "performance": {
         "noDelete": "off"
+      },
+      "style": {
+        "useEnumInitializers": "off",
+        "noNonNullAssertion": "off"
       }
     },
-    "ignore": ["./packages/**/dist/*"]
+    "ignore": ["dist/**", "*.json"]
   },
   "formatter": {
     "enabled": true,
@@ -19,6 +23,6 @@
     "indentStyle": "space",
     "indentSize": 2,
     "lineWidth": 100,
-    "ignore": ["./packages/**/dist/*"]
+    "ignore": ["dist/**", "*.json"]
   }
 }

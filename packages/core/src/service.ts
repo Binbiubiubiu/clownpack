@@ -107,7 +107,7 @@ class Service<T extends IConfiguration = Record<string, any>> {
     });
 
     this.stage = ServiceStage.initPlugins;
-    while (plugins.length) {
+    while (plugins.length > 0) {
       await this.walkPlugin({
         current: plugins.shift()!,
         plugins,
@@ -139,6 +139,7 @@ class Service<T extends IConfiguration = Record<string, any>> {
   async applyPlugins(opts: {
     name: string;
     initialValue?: any;
+    type?: ApplyPluginsType;
     args?: any;
   }) {
     const hooks = this.hooks[opts.name] || [];
@@ -146,13 +147,17 @@ class Service<T extends IConfiguration = Record<string, any>> {
       return opts.initialValue;
     }
 
-    let type;
-    if (opts.name.startsWith("on")) {
-      type = ApplyPluginsType.event;
-    } else if (opts.name.startsWith("add")) {
-      type = ApplyPluginsType.add;
-    } else if (opts.name.startsWith("modify")) {
-      type = ApplyPluginsType.modify;
+    let type = opts.type;
+    if (!type) {
+      if (opts.name.startsWith("on")) {
+        type = ApplyPluginsType.event;
+      } else if (opts.name.startsWith("add")) {
+        type = ApplyPluginsType.add;
+      } else if (opts.name.startsWith("modify")) {
+        type = ApplyPluginsType.modify;
+      } else {
+        throw new Error(`Invalid applyPlugins arguments, type must be supplied for ${opts.name}.`);
+      }
     }
 
     switch (type) {
@@ -167,7 +172,7 @@ class Service<T extends IConfiguration = Record<string, any>> {
             },
             async (memo: any) => {
               const res = await hook.apply(opts.args);
-              memo = memo.concat(res);
+              memo.push(res);
               return memo;
             },
           );
@@ -203,6 +208,10 @@ class Service<T extends IConfiguration = Record<string, any>> {
           );
         }
         return eventWaterfall.promise(1);
+      default:
+        throw new Error(
+          `applyPlugins failed, type is not defined or is not matched, got ${opts.type}.`,
+        );
     }
   }
 
@@ -240,7 +249,7 @@ class Service<T extends IConfiguration = Record<string, any>> {
         service: this,
       },
     });
-    const ret = opts.current.apply()(proxyAPI);
+    const ret = opts.current.apply()(proxyAPI, opts.current.options);
     if (api.optsSchema) {
       PluginAPI.checkPluginOpts(opts.current, api.optsSchema);
     }

@@ -32,14 +32,15 @@ enum ApplyPluginsType {
 
 type Func = (...args: any[]) => any;
 type PluginItem = string | [string, Record<string, any>];
+type PluginApply<Options> = (api: PluginAPI, options: Options) => { plugins: PluginItem[] } | void;
 
-interface IPlugin {
+interface IPlugin<Options = Record<string, any>> {
   // the plugin's name in the userConfig
   name: string;
   // absolute path
   id: string;
-  options: Record<string, any>;
-  apply: () => (api: PluginAPI) => { plugins: PluginItem[] } | void;
+  options: Options;
+  apply: () => PluginApply<Options>;
 }
 
 interface IHook {
@@ -122,6 +123,12 @@ interface IPluginAPI<T extends IConfiguration = IConfiguration>
   pkgPath: typeof Service.prototype.pkgPath;
   ServiceStage: ServiceStage;
   service: Service<T>;
+  applyPlugins(opts: {
+    name: string;
+    type?: ApplyPluginsType;
+    initialValue?: any;
+    args?: any;
+  }): Promise<any>;
   registerPlugins(plugins: PluginItem[]): void;
   onStart: IEvent<null>;
   modifyConfig: IModify<T, null>;

@@ -1,12 +1,10 @@
-import { Trace, yParser } from "@clownpack/helper";
+import { Logger, yParser } from "@clownpack/helper";
 import { Service } from "@clownpack/core";
 import { CliCmd, FRAMEWORK_NAME } from "../constants";
 import { type Configuration, Env } from "../types";
 import { printFrameworkInfo } from "./utils";
 
 export async function run() {
-  Trace.init(FRAMEWORK_NAME);
-
   const args = yParser(process.argv.slice(2));
 
   let command = `${args._[0] ?? ""}`;
@@ -20,6 +18,9 @@ export async function run() {
       process.env.NODE_ENV = Env.production;
   }
 
+  if (process.env.DEBUG) {
+    Logger.init(FRAMEWORK_NAME);
+  }
   const service = new Service<Configuration>({
     frameworkName: FRAMEWORK_NAME,
     cwd: process.cwd(),

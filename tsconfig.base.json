@@ -3,7 +3,7 @@
   "compileOnSave": true,
   "compilerOptions": {
     "strict": true,
-    "target": "es6",
+    "target": "es2019",
     "allowJs": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,

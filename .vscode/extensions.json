@@ -1,6 +1,3 @@
 {
-  "recommendations": [
-    "rome.rome",
-    "esbenp.prettier-vscode"
-  ],
+  "recommendations": ["rome.rome", "esbenp.prettier-vscode"]
 }

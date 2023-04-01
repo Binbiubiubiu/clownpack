@@ -6,7 +6,6 @@
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
-    "importHelpers": true,
     "allowJs": true,
     "skipLibCheck": true,
     "moduleResolution": "node",
@@ -18,17 +17,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    "lib": ["esnext", "dom", "dom.iterable"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx",
-    "src/main.jsx",
-    "src/App.tsx",
-    "src/ main.js"
-  ],
-  "exclude": ["node_modules"]
+  "include": ["./src"]
 }

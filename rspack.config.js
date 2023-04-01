@@ -83,7 +83,7 @@ function createCSSRule(test, loader, options = {}) {
 
 function createJsxRule(isTs) {
   let test = /\.jsx$/;
-  let presets = ["@vue/babel-preset-app"];
+  const presets = ["@vue/babel-preset-app"];
   if (isTs) {
     test = /\.tsx$/;
     presets.push("@babel/preset-typescript");

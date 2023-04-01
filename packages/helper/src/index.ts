@@ -15,7 +15,7 @@ export {
   importLazy,
 };
 
-export { Trace } from "./trace";
+export * from "./logger";
 
 const merge: ReturnType<typeof deepmerge> = deepmerge();
 const resolveSync = resolve.sync;
@@ -45,6 +45,6 @@ function getModuleAbsPath(opts: { name: string; cwd?: string; type?: string } | 
   }
 }
 
-function importLazy<R = any>(name: string, opts?: { cwd?: string }): Promise<R> {
+function importLazy<R>(name: string, opts?: { cwd?: string }): Promise<R> {
   return import(resolve.sync(name, { basedir: opts?.cwd ?? process.cwd() }));
 }
