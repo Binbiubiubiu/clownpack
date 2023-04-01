@@ -1,6 +1,6 @@
 {
   "name": "@clownpack/cli",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "A bundle build tool",
   "keywords": [],
   "author": "Binbiubiubiu <2632003786@qq.com>",
@@ -22,8 +22,7 @@
   },
   "dependencies": {
     "@clownpack/core": "workspace:*",
-    "@clownpack/helper": "workspace:*",
-    "v8-compile-cache": "2.3.0"
+    "@clownpack/helper": "workspace:*"
   },
   "peerDependencies": {
     "@clownpack/webpack": "workspace:*"

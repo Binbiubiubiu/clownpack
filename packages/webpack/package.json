@@ -14,13 +14,13 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@babel/core": "^7.21.3",
-    "@babel/preset-typescript": "^7.21.0",
+    "@babel/core": "7.21.3",
+    "@babel/preset-typescript": "7.21.0",
     "@clownpack/babel-preset": "workspace:*",
     "@clownpack/helper": "workspace:*",
-    "@nuxtjs/friendly-errors-webpack-plugin": "^2.1.0",
-    "babel-loader": "^9.1.2",
-    "browserslist": "^4.21.5",
+    "@nuxt/friendly-errors-webpack-plugin": "2.5.2",
+    "babel-loader": "9.1.2",
+    "browserslist": "4.21.5",
     "copy-webpack-plugin": "10.2.4",
     "css-loader": "6.7.3",
     "css-minimizer-webpack-plugin": "5.0.0",

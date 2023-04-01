@@ -93,7 +93,7 @@ async function getConfig(opts: IBuildOptions) {
     config.cache({
       type: "filesystem",
       version: require("../../package.json").version,
-      cacheDirectory: extraCacheOptions.cacheDirectory || getDefaultCacheDirectory(opts.cwd),
+      cacheDirectory: extraCacheOptions.cacheDirectory ?? getDefaultCacheDirectory(opts.cwd),
       ...extraCacheOptions,
     });
   }

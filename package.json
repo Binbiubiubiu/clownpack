@@ -9,7 +9,7 @@
   "scripts": {
     "build": "turbo run build",
     "test": "turbo run test",
-    "lint": "rome ci .",
+    "lint": "rome ci . && prettier --check .",
     "format": "rome format --write . && prettier --write .",
     "clean": "rimraf --glob  .turbo ./node_modules/.cache/turbo ./packages/*/{.turbo,dist,coverage,*.lcov}",
     "play": "pnpm build && pnpm --filter=playground run clownpack ",

@@ -15,6 +15,7 @@ export default (api: IApi) => {
             cwd: api.cwd,
             env: api.env as `${Env}`,
             clean: true,
+            cache: true,
           });
         },
       );
