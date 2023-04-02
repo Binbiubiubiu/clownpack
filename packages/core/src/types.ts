@@ -46,7 +46,7 @@ interface IPlugin<Options = Record<string, any>> {
 interface IHook {
   name: string;
   apply: Func;
-  pluginId: string;
+  plugin: IPlugin;
   stage?: number;
   before?: string;
 }
@@ -108,11 +108,15 @@ interface IAdd<T, U> {
   }): void;
 }
 
+type NeedProxyPluginAPI =
+  | "register"
+  | "registerCommand"
+  | "registerMethod"
+  | "addPluginOptsSchema"
+  | "skipPlugins";
+
 interface IPluginAPI<T extends IConfiguration = IConfiguration>
-  extends Pick<
-    PluginAPI,
-    "register" | "registerCommand" | "registerMethod" | "addPluginOptsSchema"
-  > {
+  extends Pick<PluginAPI, NeedProxyPluginAPI> {
   cwd: typeof Service.prototype.cwd;
   env: typeof Service.prototype.env;
   command: typeof Service.prototype.command;

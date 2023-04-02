@@ -28,6 +28,10 @@ function useJs(config: Config, opts: IBuildOptions) {
         cacheDirectory: false,
         browserslistConfigFile: false,
         targets: getBabelTargets(opts),
+        // assumptions: {
+        //   setPublicClassFields: true,
+        //   privateFieldsAsProperties: true,
+        // },
         presets: [
           [
             require.resolve("@clownpack/babel-preset"),

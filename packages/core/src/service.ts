@@ -39,6 +39,7 @@ class Service<T extends IConfiguration = Record<string, any>> {
   commands: Record<string, ICommand> = {};
   userConfig = {} as T;
   config = {} as T;
+  skipPluginIds = new Set<string>();
   stage: ServiceStage = ServiceStage.uninitialized;
   configProvider: IConfigProvider<T>;
   pkgPath: string = "";
@@ -164,9 +165,10 @@ class Service<T extends IConfiguration = Record<string, any>> {
       case ApplyPluginsType.add:
         const addWaterfall = new AsyncSeriesWaterfallHook(["memo"]);
         for (const hook of hooks) {
+          if (!this.isPluginEnable(hook)) continue;
           addWaterfall.tapPromise(
             {
-              name: hook.pluginId,
+              name: hook.plugin.id,
               stage: hook.stage || 0,
               before: hook.before,
             },
@@ -181,9 +183,10 @@ class Service<T extends IConfiguration = Record<string, any>> {
       case ApplyPluginsType.modify:
         const modifyWaterfall = new AsyncSeriesWaterfallHook(["arg"]);
         for (const hook of hooks) {
+          if (!this.isPluginEnable(hook)) continue;
           modifyWaterfall.tapPromise(
             {
-              name: hook.pluginId,
+              name: hook.plugin.id,
               stage: hook.stage || 0,
               before: hook.before,
             },
@@ -196,9 +199,10 @@ class Service<T extends IConfiguration = Record<string, any>> {
       case ApplyPluginsType.event:
         const eventWaterfall = new AsyncSeriesWaterfallHook(["_"]);
         for (const hook of hooks) {
+          if (!this.isPluginEnable(hook)) continue;
           eventWaterfall.tapPromise(
             {
-              name: hook.pluginId,
+              name: hook.plugin.id,
               stage: hook.stage || 0,
               before: hook.before,
             },
@@ -213,6 +217,19 @@ class Service<T extends IConfiguration = Record<string, any>> {
           `applyPlugins failed, type is not defined or is not matched, got ${opts.type}.`,
         );
     }
+  }
+
+  isPluginEnable(hook: IHook | string) {
+    let plugin: IPlugin;
+    if ((hook as IHook).plugin) {
+      plugin = (hook as IHook).plugin;
+    } else {
+      plugin = this.plugins[hook as string];
+      if (!plugin) return false;
+    }
+    const { id } = plugin;
+    if (this.skipPluginIds.has(id)) return false;
+    return true;
   }
 
   private async walkPlugin(opts: {
@@ -234,15 +251,16 @@ class Service<T extends IConfiguration = Record<string, any>> {
       api,
       service: this,
       serviceProps: [
+        "args",
+        "applyPlugins",
+        "config",
         "cwd",
         "env",
         "command",
-        "args",
         "userConfig",
-        "config",
         "pkg",
         "pkgPath",
-        "applyPlugins",
+        "isPluginEnable",
       ],
       extraProps: {
         ServiceStage,

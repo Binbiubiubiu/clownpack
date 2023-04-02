@@ -1,5 +1,5 @@
 import { IOptions } from "./types";
-import { getCorejsVersion, getRuntimeVersion, pkgPath } from "./utils";
+import { getCorejsVersion, getDepVersion, pkgPath } from "./utils";
 
 export default (_: any, opts: IOptions) => {
   return {
@@ -8,11 +8,14 @@ export default (_: any, opts: IOptions) => {
         require.resolve("@babel/preset-env"),
         {
           bugfixes: true,
+          spec: false,
           loose: false,
           modules: false,
+          debug: false,
+          forceAllTransforms: false,
+          ignoreBrowserslistConfig: true,
           useBuiltIns: "entry",
           corejs: getCorejsVersion(),
-          ignoreBrowserslistConfig: true,
           ...opts.presetEnv,
         },
       ],
@@ -43,7 +46,7 @@ export default (_: any, opts: IOptions) => {
           helpers: true,
           regenerator: true,
           absoluteRuntime: pkgPath,
-          version: getRuntimeVersion(),
+          version: getDepVersion("@babel/runtime"),
           ...opts.pluginTransformRuntime,
         },
       ],

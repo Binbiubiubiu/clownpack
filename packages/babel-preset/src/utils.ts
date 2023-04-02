@@ -1,6 +1,6 @@
 import path from "path";
 
-export { pkgPath, getCorejsVersion, getRuntimeVersion };
+export { pkgPath, getCorejsVersion, getDepVersion };
 
 const pkgPath = path.join(__dirname, "..");
 
@@ -10,10 +10,6 @@ function getCorejsVersion() {
   } catch {
     return "3";
   }
-}
-
-function getRuntimeVersion() {
-  return getDepVersion("@babel/runtime");
 }
 
 function getDepVersion(name: string) {

@@ -1,11 +1,13 @@
 import assert from "assert";
 import zod from "zod";
+import path from "path";
 
 import {
   createEsbuildRegister,
   getModuleAbsPath,
   getModuleDefaultExport,
   colorette,
+  resolveSync,
 } from "@clownpack/helper";
 
 import { fromZodError } from "zod-validation-error";
@@ -34,7 +36,7 @@ export class PluginAPI {
     this.plugin = options.plugin;
   }
 
-  register(hook: Omit<IHook, "pluginId">) {
+  register(hook: Omit<IHook, "plugin">) {
     assert(
       typeof hook.name === "string",
       `Failed to register the hook ${hook.name} in the plugin ${this.plugin.name}. The name of the hook must be a string`,
@@ -46,7 +48,7 @@ export class PluginAPI {
     this.service.hooks[hook.name] ||= [];
     this.service.hooks[hook.name].push({
       ...hook,
-      pluginId: this.plugin.id,
+      plugin: this.plugin,
     });
   }
 
@@ -114,6 +116,19 @@ export class PluginAPI {
 
   addPluginOptsSchema(generator: typeof PluginAPI.prototype.optsSchema) {
     this.optsSchema = generator;
+  }
+
+  skipPlugins(keys: string[]) {
+    for (const oldKey of keys) {
+      let key = oldKey;
+      if (!path.isAbsolute(key)) {
+        try {
+          key = resolveSync(key, { basedir: this.service.cwd });
+        } catch {}
+      }
+      assert(this.plugin.id === key, `plugin ${oldKey} can't skip itself!`);
+      this.service.skipPluginIds.add(key);
+    }
   }
 
   static proxy(opts: {

@@ -2,5 +2,6 @@ import { defineConfig } from "@clownpack/cli";
 
 export default defineConfig({
   plugins: [["./custom-plugin.ts", { name: "Binbiubiubiu" }], "@clownpack/webpack"],
-  executor: "webpack",
+  input: "./src/index.ts",
+  module: "umd",
 });

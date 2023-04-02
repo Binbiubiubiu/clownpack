@@ -69,11 +69,11 @@ interface IBuildOptions {
   /**
    * 监听模式配置
    */
-  watch?: webpack.Configuration["watch"] | webpack.Configuration["watchOptions"];
+  watch?: boolean | webpack.Configuration["watch"] | webpack.Configuration["watchOptions"];
   /**
    * 依赖分析
    */
-  analyze?: IAnyObject;
+  analyze?: boolean | IAnyObject;
   /**
    * css代码压缩工具
    */
@@ -144,10 +144,6 @@ interface IBuildOptions {
    * 名称
    */
   name?: string;
-  /**
-   * 输出模块
-   */
-  module: "esm" | "cjs" | "umd";
   /**
    * 输出文件夹
    */

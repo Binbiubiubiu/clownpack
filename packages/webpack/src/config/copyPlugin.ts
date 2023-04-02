@@ -1,4 +1,4 @@
-import CopyPlugin, { type Pattern } from "copy-webpack-plugin";
+import type { Pattern } from "copy-webpack-plugin";
 import Config from "webpack-5-chain";
 import fs from "fs";
 import path from "path";
@@ -38,7 +38,7 @@ function useCopyPlugin(config: Config, opts: IBuildOptions) {
   }
 
   if (copyPatterns.length) {
-    config.plugin("copy-webpack-plugin").use(CopyPlugin, [
+    config.plugin("copy-webpack-plugin").use(require("copy-webpack-plugin"), [
       {
         patterns: copyPatterns,
       },

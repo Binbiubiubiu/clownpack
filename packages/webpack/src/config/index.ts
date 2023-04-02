@@ -66,12 +66,12 @@ async function getConfig(opts: IBuildOptions) {
 
   config.externals(opts.externals || []);
 
-  config.target(["web", "es5"]);
+  // config.target(["web", "es5"]);
 
-  config.experiments({
-    topLevelAwait: true,
-    outputModule: opts.module === "esm",
-  });
+  // config.experiments({
+  //   topLevelAwait: true,
+  //   outputModule: opts.module === "esm",
+  // });
 
   // rules
   useAssets(config, opts);
@@ -98,9 +98,7 @@ async function getConfig(opts: IBuildOptions) {
     });
   }
 
-  if (opts.analyze) {
-    useBundleAnalyzerPlugin(config, opts);
-  }
+  useBundleAnalyzerPlugin(config, opts);
 
   // chain webpack
   if (opts.chainWebpack) {
