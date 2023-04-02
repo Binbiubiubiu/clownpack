@@ -21,7 +21,7 @@ interface Configuration extends IConfiguration {
   input: string | { [key: string]: string };
   module: `${OutputModule}`;
   outDir?: string;
-  targets?: string | string[] | { [key: string]: any };
+  // targets?: string | string[]; //| { [key: string]: any };
   name?: string;
   clean?: boolean;
 }

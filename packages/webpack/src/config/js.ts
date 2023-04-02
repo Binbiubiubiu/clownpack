@@ -1,6 +1,6 @@
 import Config from "webpack-5-chain";
 import type { IBuildOptions } from "../types";
-import { getBabelTargets } from "../utils";
+// import { getBabelTargets } from "../utils";
 
 export { useJs };
 
@@ -26,8 +26,8 @@ function useJs(config: Config, opts: IBuildOptions) {
         configFile: false,
         babelrc: false,
         cacheDirectory: false,
-        browserslistConfigFile: false,
-        targets: getBabelTargets(opts),
+        // browserslistConfigFile: false,
+        // targets: getBabelTargets(opts),
         // assumptions: {
         //   setPublicClassFields: true,
         //   privateFieldsAsProperties: true,

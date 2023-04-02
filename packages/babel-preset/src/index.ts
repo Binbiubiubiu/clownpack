@@ -13,7 +13,7 @@ export default (_: any, opts: IOptions) => {
           modules: false,
           debug: false,
           forceAllTransforms: false,
-          ignoreBrowserslistConfig: true,
+          // ignoreBrowserslistConfig: true,
           useBuiltIns: "entry",
           corejs: getCorejsVersion(),
           ...opts.presetEnv,

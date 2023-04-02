@@ -45,7 +45,7 @@ interface IBuildOptions {
   /**
    * 支持平台
    */
-  targets?: string | readonly string[] | IAnyObject<number | string>;
+  // targets?: string | readonly string[]; //| IAnyObject<number | string>;
   /**
    * 路径别名
    */

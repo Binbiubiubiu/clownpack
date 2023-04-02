@@ -1,6 +1,6 @@
 import Config from "webpack-5-chain";
 import type { IBuildOptions } from "../types";
-import { getPostcssBrowsers } from "../utils";
+// import { getPostcssBrowsers } from "../utils";
 
 export { useCss };
 
@@ -100,7 +100,7 @@ function useCss(config: Config, opts: IBuildOptions) {
             plugins: [
               require("postcss-flexbugs-fixes"),
               require("postcss-preset-env")({
-                browsers: getPostcssBrowsers(opts),
+                // browsers: getPostcssBrowsers(opts),
                 autoprefixer: {
                   flexbox: "no-2009",
                   ...opts.autoprefixer,
