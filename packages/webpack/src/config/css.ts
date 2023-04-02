@@ -91,6 +91,10 @@ function useCss(config: Config, opts: IBuildOptions) {
           ...opts.cssLoader,
         });
 
+      const extraPostcssEnvOptions: any = {};
+      if (opts.browerslist) {
+        extraPostcssEnvOptions.browsers = opts.browerslist; // getPostcssBrowsers(opts),
+      }
       rule
         .use("postcss-loader")
         .loader(require.resolve("postcss-loader"))
@@ -100,12 +104,12 @@ function useCss(config: Config, opts: IBuildOptions) {
             plugins: [
               require("postcss-flexbugs-fixes"),
               require("postcss-preset-env")({
-                // browsers: getPostcssBrowsers(opts),
                 autoprefixer: {
                   flexbox: "no-2009",
                   ...opts.autoprefixer,
                 },
                 stage: 3,
+                ...extraPostcssEnvOptions,
               }),
               ...(opts.extraPostCSSPlugins || []),
             ],

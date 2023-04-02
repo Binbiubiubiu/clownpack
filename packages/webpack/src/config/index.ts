@@ -1,6 +1,7 @@
 import Config from "webpack-5-chain";
 import webpack from "webpack";
 import path from "path";
+import browserslist from "browserslist";
 import { DEFAULT_DEVTOOL, DEFAULT_OUTPUT_PATH } from "../constants";
 import { type IBuildOptions } from "../types";
 // rules
@@ -65,6 +66,12 @@ async function getConfig(opts: IBuildOptions) {
     .end();
 
   config.externals(opts.externals || []);
+
+  // webpack 默认 target browerslist 优先
+  opts.browerslist ??= browserslist.loadConfig({ path: opts.cwd });
+  if (opts.browerslist?.length) {
+    process.env.BROWSERSLIST = ([] as string[]).concat(opts.browerslist ?? []).join(",");
+  }
 
   // config.target(["web", "es5"]);
 

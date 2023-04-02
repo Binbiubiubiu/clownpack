@@ -15,7 +15,7 @@ export default (api: IApi) => {
 
       importLazy<typeof import("@clownpack/webpack")>("@clownpack/webpack", { cwd: api.cwd }).then(
         (executor) => {
-          const { input, clean, name = api.pkg.name, module } = api.config;
+          const { input, clean, browerslist, name = api.pkg.name, module } = api.config;
           if (!(module in SUPPOTR_MODULE)) {
             throw new Error(`module ${module} is not supported`);
           }
@@ -26,6 +26,7 @@ export default (api: IApi) => {
             cwd: api.cwd,
             env: api.env as `${Env}`,
             clean,
+            browerslist,
             chainWebpack: async (config) => {
               config.output.library({
                 type: SUPPOTR_MODULE[module],

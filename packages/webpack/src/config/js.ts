@@ -18,6 +18,10 @@ function useJs(config: Config, opts: IBuildOptions) {
 
   for (const rule of srcRules) {
     rule.resolve.fullySpecified(false);
+    const extraBabelOptions: any = {};
+    if (opts.browerslist) {
+      extraBabelOptions.targets = opts.browerslist; // getBabelTargets(opts),
+    }
     rule
       .use("babel-loader")
       .loader(require.resolve("babel-loader"))
@@ -27,7 +31,7 @@ function useJs(config: Config, opts: IBuildOptions) {
         babelrc: false,
         cacheDirectory: false,
         // browserslistConfigFile: false,
-        // targets: getBabelTargets(opts),
+        ...extraBabelOptions,
         // assumptions: {
         //   setPublicClassFields: true,
         //   privateFieldsAsProperties: true,

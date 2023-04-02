@@ -30,7 +30,7 @@ function getEsbuildTarget(opts: IBuildOptions): string[] {
   };
 
   // if (isString(targets) || isStrings(targets)) {
-  const validTargets = (browserslist.loadConfig({}) ?? [])
+  const validTargets = browserslist(opts.browerslist)
     // `chrome 110` => ["chrome","110"]
     .map((t) => t.split(" "))
     // filter esbuild not support browers
@@ -60,7 +60,6 @@ function getEsbuildTarget(opts: IBuildOptions): string[] {
   //     }
   //   }
   // }
-
   return Object.keys(validTargets).map((k) => `${k}${validTargets[k]}`);
 }
 
