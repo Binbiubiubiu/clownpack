@@ -1,6 +1,6 @@
 import { importLazy } from "@clownpack/helper";
 import { ApplyPluginsType } from "@clownpack/core";
-import { Env, Module } from "../types";
+import { Env, Format } from "../types";
 import { definePlugin } from "../define";
 
 export default definePlugin((api) => {
@@ -12,11 +12,11 @@ export default definePlugin((api) => {
       if (api.config.runner === "webpack") {
         const {
           name = api.pkg.name,
-          module = "umd",
+          format = "umd",
           input = "src/index.ts",
           ...userConfig
         } = api.config;
-        const SUPPOTR_MODULE: Record<`${Module}`, string> = {
+        const SUPPOTR_FORMAT = {
           umd: "umd",
           cjs: "commonjs-static",
           esm: "module",
@@ -25,11 +25,12 @@ export default definePlugin((api) => {
         importLazy<typeof import("@clownpack/webpack")>("@clownpack/webpack", {
           cwd: api.cwd,
         }).then((executor) => {
-          if (!(module in SUPPOTR_MODULE)) {
-            throw new Error(`module ${module} is not supported`);
+          if (!(format in SUPPOTR_FORMAT)) {
+            throw new Error(`module ${format} is not supported`);
           }
           const entry = typeof input === "string" ? { main: input } : input;
 
+          console.log("build..");
           executor
             .build({
               name,
@@ -39,17 +40,14 @@ export default definePlugin((api) => {
               clean: userConfig.clean,
               browserslist: userConfig.browserslist,
               externals: userConfig.externals,
+              esModule: format === Format.esm,
               jsMinifier: false,
-              transpiler: "swc",
+              // transpiler: "swc",
               chainWebpack: async (config, args) => {
                 config.output.library({
-                  type: SUPPOTR_MODULE[module],
+                  type: SUPPOTR_FORMAT[format],
                   umdNamedDefine: true,
-                  ...(module === Module.umd && { name }),
-                });
-
-                config.experiments({
-                  outputModule: module === Module.esm,
+                  ...(format === Format.umd && { name }),
                 });
 
                 await userConfig.chainWebpack?.(config, args);
@@ -75,7 +73,7 @@ export default definePlugin((api) => {
                 );
               },
             })
-            .catch(() => {});
+            .catch(console.log);
         });
       }
     },

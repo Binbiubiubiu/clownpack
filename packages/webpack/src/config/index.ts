@@ -18,7 +18,7 @@ import { useMiniCssExtractPlugin } from "./miniCssExtractPlugin";
 import { useCopyPlugin } from "./copyPlugin";
 import { useWebpackbar } from "./webpackbar";
 import { useSpeedMeasurePlugin } from "./speedMeasurePlugin";
-import { getDefaultCacheDirectory, loadTsConfig } from "../utils";
+import { getDefaultCacheDirectory } from "../utils";
 
 export { getConfig };
 
@@ -50,6 +50,7 @@ async function getConfig(opts: IBuildOptions) {
   config.output
     .path(absOutputPath)
     .clean(opts.clean || false)
+    .module(opts.esModule || false)
     .filename(opts.hash ? "[name].[contenthash:8].js" : "[name].js")
     .chunkFilename(opts.hash ? "[name].[contenthash:8].chunk.js" : "[name].chunk.js")
     .publicPath(opts.publicPath || "auto")
@@ -67,22 +68,20 @@ async function getConfig(opts: IBuildOptions) {
 
   config.externals(opts.externals || []);
 
-  loadTsConfig(opts);
-
   // 设置默认的 browserslist
   if (!opts.browserslist?.length) {
     opts.browserslist =
-      browserslist(opts.browserslist, { path: opts.cwd }) ?? (browserslist.defaults as string[]);
+      browserslist.loadConfig({ path: opts.cwd }) ?? (browserslist.defaults as string[]);
   }
   // webpack 默认 target browserslist 优先
   process.env.BROWSERSLIST = ([] as string[]).concat(opts.browserslist ?? []).join(",");
   // config.target("browserslist");
   // config.target(["web", "es5"]);
 
-  // config.experiments({
-  //   topLevelAwait: true,
-  //   outputModule: opts.module === "esm",
-  // });
+  config.experiments({
+    topLevelAwait: true,
+    outputModule: opts.esModule,
+  });
 
   // rules
   useAssets(config, opts);

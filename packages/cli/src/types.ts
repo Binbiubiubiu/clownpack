@@ -6,7 +6,7 @@ export enum Env {
   production = "production",
 }
 
-export enum Module {
+export enum Format {
   cjs = "cjs",
   esm = "esm",
   umd = "umd",
@@ -19,7 +19,7 @@ export enum Runner {
 interface BaseConfiguration<T> extends IConfiguration {
   runner: T;
   input?: string | { [key: string]: string };
-  module?: `${Module}`;
+  format?: `${Format}`;
   outDir?: string;
   browserslist?: string | string[]; //| { [key: string]: any };
   name?: string;

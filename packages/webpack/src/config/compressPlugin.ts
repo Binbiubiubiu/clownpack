@@ -2,10 +2,8 @@ import TerserPlugin from "terser-webpack-plugin";
 import CSSMinimizerWebpackPlugin from "css-minimizer-webpack-plugin";
 import Config from "webpack-5-chain";
 import type { IAnyObject } from "@clownpack/helper";
+import { getEsbuildTargets } from "@clownpack/esbuild-preset-env";
 import { Env, CSSMinifier, JSMinifier, type IBuildOptions } from "../types";
-import { getEsbuildTarget } from "../utils";
-
-export { useCompressPlugin };
 
 function defaultMinifier(
   v: IBuildOptions["jsMinifier"],
@@ -22,7 +20,7 @@ function defaultMinifier(
   return v === true ? dv : v ?? dv;
 }
 
-function useCompressPlugin(config: Config, opts: IBuildOptions) {
+export function useCompressPlugin(config: Config, opts: IBuildOptions) {
   const jsMinifier = defaultMinifier(opts.jsMinifier, JSMinifier.esbuild);
   const cssMinifier = defaultMinifier(opts.cssMinifier, CSSMinifier.esbuild);
 
@@ -30,8 +28,6 @@ function useCompressPlugin(config: Config, opts: IBuildOptions) {
     config.optimization.minimize(false);
     return;
   }
-
-  const esbuildTarget = getEsbuildTarget(opts);
 
   config.optimization.minimize(true);
   let minify;
@@ -42,7 +38,7 @@ function useCompressPlugin(config: Config, opts: IBuildOptions) {
     case JSMinifier.esbuild:
       minify = TerserPlugin.esbuildMinify;
       terserOptions = {
-        target: esbuildTarget,
+        target: getEsbuildTargets({ configPath: opts.cwd }).target,
         // remove all comments
         legalComments: "none",
       };
@@ -58,7 +54,7 @@ function useCompressPlugin(config: Config, opts: IBuildOptions) {
     case JSMinifier.swc:
       minify = TerserPlugin.swcMinify;
       break;
-    case JSMinifier.swc:
+    case JSMinifier.uglifyJs:
       minify = TerserPlugin.uglifyJsMinify;
       terserOptions = {
         format: {
@@ -71,6 +67,8 @@ function useCompressPlugin(config: Config, opts: IBuildOptions) {
   }
   if (minify) {
     terserOptions = {
+      // esmodule 压缩
+      module: opts.esModule,
       ...terserOptions,
       ...opts.jsMinifierOptions,
     };
@@ -92,7 +90,7 @@ function useCompressPlugin(config: Config, opts: IBuildOptions) {
     case CSSMinifier.esbuild:
       cssMinify = CSSMinimizerWebpackPlugin.esbuildMinify;
       minimizerOptions = {
-        target: esbuildTarget,
+        target: getEsbuildTargets({ configPath: opts.cwd }).target,
       };
       break;
     case CSSMinifier.cssnano:

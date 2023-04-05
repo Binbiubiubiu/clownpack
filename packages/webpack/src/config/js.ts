@@ -1,7 +1,6 @@
 import Config from "webpack-5-chain";
+import { getEsbuildTargets } from "@clownpack/esbuild-preset-env";
 import { IBuildOptions, Transpiler } from "../types";
-import { getEsbuildTarget } from "../utils";
-// import { getBabelTargets } from "../utils";
 
 export { useJs };
 
@@ -66,7 +65,7 @@ function useJs(config: Config, opts: IBuildOptions) {
         .loader(require.resolve("esbuild-loader"))
         .options({
           implementation: require("esbuild"),
-          target: getEsbuildTarget(opts),
+          target: getEsbuildTargets({ configPath: opts.cwd }).target,
           ...opts.transpilerOptions,
         });
     } else {

@@ -123,6 +123,10 @@ export interface IBuildOptions {
    */
   stylusLoader?: IAnyObject;
   /**
+   * 是否esModule
+   */
+  esModule?: boolean;
+  /**
    * styleloader 配置
    */
   styleLoader?: IAnyObject;

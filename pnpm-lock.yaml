@@ -121,6 +121,16 @@ importers:
         specifier: 1.1.0
         version: 1.1.0(zod@3.21.4)
 
+  packages/esbuild-preset-env:
+    dependencies:
+      '@clownpack/helper':
+        specifier: workspace:*
+        version: link:../helper
+    devDependencies:
+      esbuild:
+        specifier: 0.17.12
+        version: 0.17.12
+
   packages/helper:
     dependencies:
       '@fastify/deepmerge':
@@ -166,6 +176,9 @@ importers:
       '@clownpack/babel-preset':
         specifier: workspace:*
         version: link:../babel-preset
+      '@clownpack/esbuild-preset-env':
+        specifier: workspace:*
+        version: link:../esbuild-preset-env
       '@clownpack/helper':
         specifier: workspace:*
         version: link:../helper
@@ -232,6 +245,9 @@ importers:
       speed-measure-webpack-plugin:
         specifier: 1.5.0
         version: 1.5.0(webpack@5.76.3)
+      style-loader:
+        specifier: 3.3.2
+        version: 3.3.2(webpack@5.76.3)
       stylus:
         specifier: 0.59.0
         version: 0.59.0
@@ -316,16 +332,6 @@ packages:
       - supports-color
     dev: false
 
-  /@babel/generator@7.21.3:
-    resolution: {integrity: sha512-QS3iR1GYC/YGUnW7IdggFeN5c1poPUurnGttOV/bZgPGV+izC/D8HnD6DLwod0fsatNyVn1G3EVWMYIF0nHbeA==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      '@babel/types': 7.21.4
-      '@jridgewell/gen-mapping': 0.3.2
-      '@jridgewell/trace-mapping': 0.3.17
-      jsesc: 2.5.2
-    dev: false
-
   /@babel/generator@7.21.4:
     resolution: {integrity: sha512-NieM3pVIYW2SwGzKoqfPrQsf4xGs9M9AIG3ThppsSRmO+m7eQhmI6amajKMUeIO37wFfsvnvcxQFx6x6iqxDnA==}
     engines: {node: '>=6.9.0'}
@@ -340,7 +346,7 @@ packages:
     resolution: {integrity: sha512-duORpUiYrEpzKIop6iNbjnwKLAKnJ47csTyRACyEmWj0QdUrm5aqNJGHSSEQSUAvNW0ojX0dOmK9dZduvkfeXA==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.21.3
+      '@babel/types': 7.21.4
     dev: false
 
   /@babel/helper-builder-binary-assignment-operator-visitor@7.18.9:
@@ -363,24 +369,6 @@ packages:
       browserslist: 4.21.5
       lru-cache: 5.1.1
       semver: 6.3.0
-    dev: false
-
-  /@babel/helper-create-class-features-plugin@7.21.0:
-    resolution: {integrity: sha512-Q8wNiMIdwsv5la5SPxNYzzkPnjgC0Sy0i7jLkVOCdllu/xcVNkr3TeZzbHBJrj+XXRqzX5uCyCoV9eu6xUG7KQ==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0
-    dependencies:
-      '@babel/helper-annotate-as-pure': 7.18.6
-      '@babel/helper-environment-visitor': 7.18.9
-      '@babel/helper-function-name': 7.21.0
-      '@babel/helper-member-expression-to-functions': 7.21.0
-      '@babel/helper-optimise-call-expression': 7.18.6
-      '@babel/helper-replace-supers': 7.20.7
-      '@babel/helper-skip-transparent-expression-wrappers': 7.20.0
-      '@babel/helper-split-export-declaration': 7.18.6
-    transitivePeerDependencies:
-      - supports-color
     dev: false
 
   /@babel/helper-create-class-features-plugin@7.21.4:
@@ -487,7 +475,7 @@ packages:
     resolution: {integrity: sha512-HP59oD9/fEHQkdcbgFCnbmgH5vIQTJbxh2yf+CdM89/glUNnuzr87Q8GIjGEnOktTROemO0Pe0iPAYbqZuOUiA==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.21.3
+      '@babel/types': 7.21.4
     dev: false
 
   /@babel/helper-plugin-utils@7.20.2:
@@ -517,8 +505,8 @@ packages:
       '@babel/helper-member-expression-to-functions': 7.21.0
       '@babel/helper-optimise-call-expression': 7.18.6
       '@babel/template': 7.20.7
-      '@babel/traverse': 7.21.3
-      '@babel/types': 7.21.3
+      '@babel/traverse': 7.21.4
+      '@babel/types': 7.21.4
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -534,7 +522,7 @@ packages:
     resolution: {integrity: sha512-5y1JYeNKfvnT8sZcK9DVRtpTbGiomYIHviSP3OQWmDPU3DeH4a1ZlT/N2lyQ5P8egjcRaT/Y9aNqUxK0WsnIIg==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.21.3
+      '@babel/types': 7.21.4
     dev: false
 
   /@babel/helper-split-export-declaration@7.18.6:
@@ -1310,7 +1298,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/helper-annotate-as-pure': 7.18.6
-      '@babel/helper-create-class-features-plugin': 7.21.0
+      '@babel/helper-create-class-features-plugin': 7.21.4
       '@babel/helper-plugin-utils': 7.20.2
       '@babel/plugin-syntax-typescript': 7.20.0
     transitivePeerDependencies:
@@ -1479,24 +1467,6 @@ packages:
       '@babel/code-frame': 7.21.4
       '@babel/parser': 7.21.4
       '@babel/types': 7.21.4
-    dev: false
-
-  /@babel/traverse@7.21.3:
-    resolution: {integrity: sha512-XLyopNeaTancVitYZe2MlUEvgKb6YVVPXzofHgqHijCImG33b/uTurMS488ht/Hbsb2XK3U2BnSTxKVNGV3nGQ==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      '@babel/code-frame': 7.18.6
-      '@babel/generator': 7.21.3
-      '@babel/helper-environment-visitor': 7.18.9
-      '@babel/helper-function-name': 7.21.0
-      '@babel/helper-hoist-variables': 7.18.6
-      '@babel/helper-split-export-declaration': 7.18.6
-      '@babel/parser': 7.21.3
-      '@babel/types': 7.21.4
-      debug: 4.3.4
-      globals: 11.12.0
-    transitivePeerDependencies:
-      - supports-color
     dev: false
 
   /@babel/traverse@7.21.4:
@@ -2248,7 +2218,6 @@ packages:
     cpu: [arm64]
     os: [android]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/android-arm@0.17.12:
@@ -2257,7 +2226,6 @@ packages:
     cpu: [arm]
     os: [android]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/android-x64@0.17.12:
@@ -2266,7 +2234,6 @@ packages:
     cpu: [x64]
     os: [android]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/darwin-arm64@0.17.12:
@@ -2275,7 +2242,6 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/darwin-x64@0.17.12:
@@ -2284,7 +2250,6 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/freebsd-arm64@0.17.12:
@@ -2293,7 +2258,6 @@ packages:
     cpu: [arm64]
     os: [freebsd]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/freebsd-x64@0.17.12:
@@ -2302,7 +2266,6 @@ packages:
     cpu: [x64]
     os: [freebsd]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/linux-arm64@0.17.12:
@@ -2311,7 +2274,6 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/linux-arm@0.17.12:
@@ -2320,7 +2282,6 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/linux-ia32@0.17.12:
@@ -2329,7 +2290,6 @@ packages:
     cpu: [ia32]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/linux-loong64@0.17.12:
@@ -2338,7 +2298,6 @@ packages:
     cpu: [loong64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/linux-mips64el@0.17.12:
@@ -2347,7 +2306,6 @@ packages:
     cpu: [mips64el]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/linux-ppc64@0.17.12:
@@ -2356,7 +2314,6 @@ packages:
     cpu: [ppc64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/linux-riscv64@0.17.12:
@@ -2365,7 +2322,6 @@ packages:
     cpu: [riscv64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/linux-s390x@0.17.12:
@@ -2374,7 +2330,6 @@ packages:
     cpu: [s390x]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/linux-x64@0.17.12:
@@ -2383,7 +2338,6 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/netbsd-x64@0.17.12:
@@ -2392,7 +2346,6 @@ packages:
     cpu: [x64]
     os: [netbsd]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/openbsd-x64@0.17.12:
@@ -2401,7 +2354,6 @@ packages:
     cpu: [x64]
     os: [openbsd]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/sunos-x64@0.17.12:
@@ -2410,7 +2362,6 @@ packages:
     cpu: [x64]
     os: [sunos]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/win32-arm64@0.17.12:
@@ -2419,7 +2370,6 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/win32-ia32@0.17.12:
@@ -2428,7 +2378,6 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@esbuild/win32-x64@0.17.12:
@@ -2437,7 +2386,6 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@fastify/deepmerge@1.3.0:
@@ -4176,7 +4124,6 @@ packages:
       '@esbuild/win32-arm64': 0.17.12
       '@esbuild/win32-ia32': 0.17.12
       '@esbuild/win32-x64': 0.17.12
-    dev: false
 
   /escalade@3.1.1:
     resolution: {integrity: sha512-k0er2gUkLf8O0zKJiAhmkTnJlTvINGv7ygDNPbeIsX/TJjGJZHuh9B2UxbsaEkmlEo9MfhrSzmhIlhRlI2GXnw==}
@@ -6992,6 +6939,15 @@ packages:
     dependencies:
       min-indent: 1.0.1
     dev: true
+
+  /style-loader@3.3.2(webpack@5.76.3):
+    resolution: {integrity: sha512-RHs/vcrKdQK8wZliteNK4NKzxvLBzpuHMqYmUVWeKa6MkaIQ97ZTOS0b+zapZhy6GcrgWnvWYCMHRirC3FsUmw==}
+    engines: {node: '>= 12.13.0'}
+    peerDependencies:
+      webpack: ^5.0.0
+    dependencies:
+      webpack: 5.76.3(@swc/core@1.3.46)(esbuild@0.17.12)
+    dev: false
 
   /stylehacks@6.0.0(postcss@8.4.21):
     resolution: {integrity: sha512-+UT589qhHPwz6mTlCLSt/vMNTJx8dopeJlZAlBMJPWA3ORqu6wmQY7FBXf+qD+FsqoBJODyqNxOUP3jdntFRdw==}

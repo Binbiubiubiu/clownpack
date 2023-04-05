@@ -154,7 +154,8 @@ export class PluginAPI {
         }
 
         if (opts.serviceProps.includes(key) && key in opts.service) {
-          return Reflect.get(opts.service, key);
+          const fn = Reflect.get(opts.service, key, opts.service);
+          return typeof fn === "function" ? fn.bind(opts.service) : fn;
         }
 
         if (opts.extraProps[key]) {
