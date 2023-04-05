@@ -1,16 +1,17 @@
 import { AsyncSeriesWaterfallHook } from "tapable";
-import { join } from "path";
+import path from "path";
 import assert from "assert";
 import { colorette, resolveSync, type yParser } from "@clownpack/helper";
 import { loadEnv } from "./utils";
 import {
   ApplyPluginsType,
   ServiceStage,
+  type PluginItem,
   type IPlugin,
   type ICommand,
   type IHook,
   type IConfiguration,
-  type PluginItem,
+  type IPluginAPI,
 } from "./types";
 import { DefaultConfigProvider, type IConfigProvider } from "./config";
 import { PluginAPI } from "./pluginAPI";
@@ -26,7 +27,7 @@ interface IServiceOptions<T> {
   plugins?: PluginItem[];
 }
 
-class Service<T extends IConfiguration = Record<string, any>> {
+class Service<T extends IConfiguration> {
   readonly cwd: string;
   readonly env: string;
   readonly customEnv: string | undefined;
@@ -73,7 +74,7 @@ class Service<T extends IConfiguration = Record<string, any>> {
       });
 
     // load pkg
-    this.pkgPath = join(this.cwd, "package.json");
+    this.pkgPath = path.join(this.cwd, "package.json");
     try {
       this.pkg = require(this.pkgPath);
     } catch (e) {}
@@ -125,7 +126,7 @@ class Service<T extends IConfiguration = Record<string, any>> {
     this.stage = ServiceStage.resolveConfig;
     this.config = await this.applyPlugins({
       name: "modifyConfig",
-      initialValue: this.configProvider.getUserConfig(),
+      initialValue: this.userConfig,
     });
 
     this.stage = ServiceStage.onStart;
@@ -266,8 +267,8 @@ class Service<T extends IConfiguration = Record<string, any>> {
         ServiceStage,
         service: this,
       },
-    });
-    const ret = opts.current.apply()(proxyAPI, opts.current.options);
+    }) as unknown as IPluginAPI<IConfiguration>;
+    const ret = opts.current.setup.call(opts.current, proxyAPI, opts.current.options);
     if (api.optsSchema) {
       PluginAPI.checkPluginOpts(opts.current, api.optsSchema);
     }

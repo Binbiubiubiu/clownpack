@@ -1,6 +1,6 @@
-import type { IApi } from "../types";
+import { definePlugin } from "../define";
 
-export default (api: IApi) => {
+export default definePlugin((api) => {
   api.registerCommand({
     name: "dev",
     description: "Start build in watch mode",
@@ -8,4 +8,4 @@ export default (api: IApi) => {
       console.log(api.args);
     },
   });
-};
+});

@@ -3,7 +3,7 @@ import zod from "zod";
 import path from "path";
 
 import {
-  createEsbuildRegister,
+  useEsbuildRegisterEffect,
   getModuleAbsPath,
   getModuleDefaultExport,
   colorette,
@@ -11,24 +11,26 @@ import {
 } from "@clownpack/helper";
 
 import { fromZodError } from "zod-validation-error";
-import type { Service } from "./service";
+
 import {
+  ServiceStage,
   type IPlugin,
   type PluginItem,
   type ICommand,
   type IHook,
   type Func,
-  ServiceStage,
-  ApplyPluginsType,
+  type IPluginAPI,
+  type IConfiguration,
 } from "./types";
+import { Service } from "./service";
 
 interface IPluginAPIOptions {
+  service: Service<IConfiguration>;
   plugin: IPlugin;
-  service: Service;
 }
 
 export class PluginAPI {
-  service: Service;
+  service: Service<IConfiguration>;
   plugin: IPlugin;
   optsSchema: ((z: typeof zod) => zod.Schema) | null = null;
   constructor(options: IPluginAPIOptions) {
@@ -131,9 +133,9 @@ export class PluginAPI {
     }
   }
 
-  static proxy(opts: {
+  static proxy<T extends IConfiguration>(opts: {
     api: PluginAPI;
-    service: Service;
+    service: Service<T>;
     serviceProps: string[];
     extraProps: Record<string, any>;
   }) {
@@ -161,7 +163,7 @@ export class PluginAPI {
 
         return Reflect.get(target, key, receiver);
       },
-    });
+    }) as unknown as IPluginAPI<T>;
   }
 
   static getPresetOrPluginMap(items: PluginItem[]) {
@@ -169,49 +171,58 @@ export class PluginAPI {
     if (Array.isArray(items)) {
       for (const item of items) {
         if (typeof item === "string") {
-          const name = item;
-          map[name] = null;
+          const path = item;
+          map[path] = null;
         } else if (Array.isArray(item)) {
-          const name = getModuleAbsPath(item[0]);
-          map[name] = item[1];
+          const path = getModuleAbsPath(item[0]);
+          map[path] = item[1];
         }
       }
     }
     return map;
   }
 
-  static resolvePlugins(opts: {
+  static resolvePlugins<T extends IConfiguration>(opts: {
     cwd: string;
     plugins?: PluginItem[];
-  }): IPlugin[] {
+  }): IPlugin<T>[] {
     const map = PluginAPI.getPresetOrPluginMap(opts.plugins || []);
-    return Object.keys(map).map((name) => {
+    return Object.keys(map).map((path) => {
       const id = getModuleAbsPath({
-        name,
+        path,
         type: "plugin",
         cwd: opts.cwd,
       });
-      return <IPlugin>{
-        name,
+      const plugin: IPlugin<T> = {
+        name: path,
         id,
-        options: map[name],
-        apply: () => {
-          const unregister = createEsbuildRegister({
-            hookMatcher: (fileName) => fileName === id,
-          });
-          try {
-            return getModuleDefaultExport(require(id));
-          } catch (e: any) {
-            throw new Error(`Register plugin ${name} failed, since ${e.message}`);
-          } finally {
-            unregister();
-          }
-        },
+        options: map[path],
+        setup: () => {},
       };
+      useEsbuildRegisterEffect(() => {
+        try {
+          const mod = getModuleDefaultExport(require(id));
+          if (typeof mod.name === "string" && mod.name) {
+            plugin.name = mod.name;
+          }
+
+          if (typeof mod === "function") {
+            plugin.setup = mod;
+          } else if (typeof mod.setup === "function") {
+            plugin.setup = mod.setup;
+          }
+        } catch (e: any) {
+          throw new Error(`Register plugin ${path} failed, since ${e.message}`);
+        }
+      }, [id]);
+      return plugin;
     });
   }
 
-  static checkPluginOpts(plugin: IPlugin, generator: typeof PluginAPI.prototype.optsSchema) {
+  static checkPluginOpts<T extends IConfiguration>(
+    plugin: IPlugin<T>,
+    generator: typeof PluginAPI.prototype.optsSchema,
+  ) {
     const schema = generator?.(zod);
     if (schema) {
       assert(

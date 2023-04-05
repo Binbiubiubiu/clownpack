@@ -1,6 +1,8 @@
 import { IOptions } from "./types";
 import { getCorejsVersion, getDepVersion, pkgPath } from "./utils";
 
+export { getCorejsVersion };
+
 export default (_: any, opts: IOptions) => {
   return {
     presets: [
@@ -13,13 +15,12 @@ export default (_: any, opts: IOptions) => {
           modules: false,
           debug: false,
           forceAllTransforms: false,
-          // ignoreBrowserslistConfig: true,
-          useBuiltIns: "entry",
-          corejs: getCorejsVersion(),
+          ignoreBrowserslistConfig: true,
+          ...(!opts.pluginTransformRuntime && { useBuiltIns: "entry", corejs: getCorejsVersion() }),
           ...opts.presetEnv,
         },
       ],
-      [
+      opts.presetReact && [
         require.resolve("@babel/preset-react"),
         {
           runtime: "automatic",
@@ -37,7 +38,7 @@ export default (_: any, opts: IOptions) => {
           ...opts.presetTypescript,
         },
       ],
-    ],
+    ].filter(Boolean),
     plugins: [
       opts.pluginTransformRuntime && [
         require.resolve("@babel/plugin-transform-runtime"),

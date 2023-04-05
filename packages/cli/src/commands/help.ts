@@ -1,8 +1,9 @@
-import type { IApi } from "../types";
 import { colorette } from "@clownpack/helper";
-import type { Service, IConfiguration } from "@clownpack/core";
+import type { Service } from "@clownpack/core";
+import { definePlugin } from "../define";
+import { Configuration } from "../types";
 
-export default (api: IApi) => {
+export default definePlugin((api) => {
   api.registerCommand({
     name: "help",
     apply: () => {
@@ -21,14 +22,14 @@ export default (api: IApi) => {
       }
     },
   });
-};
+});
 
 const COMMON_OPTIONS = {
   "-h, --help": "Print help information",
   "-v, --version": "Print the version number",
 };
 
-function showHelp<T extends IConfiguration>(this: Service<T>, command: string) {
+function showHelp(this: Service<Configuration>, command: string) {
   const cmd = this.commands[command];
 
   console.log();
@@ -54,7 +55,7 @@ function showHelp<T extends IConfiguration>(this: Service<T>, command: string) {
   }
 }
 
-function showHelps<T extends IConfiguration>(this: Service<T>) {
+function showHelps(this: Service<Configuration>) {
   console.log();
   console.log(`Usage: ${colorette.magentaBright(this.frameworkName)} <COMMAND> [OPTIONS] `);
 

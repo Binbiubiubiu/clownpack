@@ -1,7 +1,7 @@
 import { join } from "path";
 import { existsSync } from "fs";
 import { DEFAULT_CONFIG_EXTENSIONS, DEFAULT_FRAMEWORK_NAME, DEFAULT_NODE_ENV } from "./constants";
-import { merge, createEsbuildRegister, getModuleDefaultExport } from "@clownpack/helper";
+import { merge, getModuleDefaultExport, useEsbuildRegisterEffect } from "@clownpack/helper";
 import { localEnvSuffix } from "./utils";
 
 interface IConfigOptions {
@@ -34,18 +34,16 @@ export class DefaultConfigProvider<T> implements IConfigProvider<T> {
   getUserConfig(): T {
     let config = {} as T;
     const configFiles = this.getConfigFiles();
-    const unregister = createEsbuildRegister({
-      hookMatcher: (fileName) => configFiles.includes(fileName),
-    });
-    for (const file of configFiles) {
-      config = merge(config, getModuleDefaultExport(require(file)));
-    }
-    for (const file of configFiles) {
-      if (require.cache[file]) {
-        delete require.cache[file];
+    useEsbuildRegisterEffect(() => {
+      for (const file of configFiles) {
+        config = merge(config, getModuleDefaultExport(require(file)));
       }
-    }
-    unregister();
+      for (const file of configFiles) {
+        if (require.cache[file]) {
+          delete require.cache[file];
+        }
+      }
+    }, configFiles);
     return config;
   }
 

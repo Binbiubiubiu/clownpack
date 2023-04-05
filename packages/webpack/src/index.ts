@@ -1,11 +1,12 @@
-import type { IPluginAPI } from "@clownpack/core";
+import type { IConfiguration, IPluginAPI } from "@clownpack/core";
 
-export { build } from "./build";
-
-export default function (api: IPluginAPI) {
+export default function (api: IPluginAPI<IConfiguration>) {
   ["chainWebpack", "modifyWebpackConfig"].forEach((name) => {
     api.registerMethod({
       name,
     });
   });
 }
+
+export { build } from "./build";
+export type { IPluginAPI, IConfiguration } from "./types";

@@ -1,30 +1,40 @@
-import type { IPluginAPI, IConfiguration } from "@clownpack/core";
+import type { IConfiguration, PluginItem } from "@clownpack/core";
+import { type } from "os";
 
-export { Env, OutputModule };
-export type { Configuration, IApi };
-
-enum Env {
+export enum Env {
   development = "development",
   production = "production",
 }
 
-enum OutputModule {
+export enum Module {
   cjs = "cjs",
   esm = "esm",
   umd = "umd",
 }
 
-interface Configuration extends IConfiguration {
-  // input: string;
-  // outDir: string;
-  // target: string;
-  input: string | { [key: string]: string };
-  module: `${OutputModule}`;
+export enum Runner {
+  webpack = "webpack",
+  tsc = "tsc",
+}
+interface BaseConfiguration<T> extends IConfiguration {
+  runner: T;
+  input?: string | { [key: string]: string };
+  module?: `${Module}`;
   outDir?: string;
-  browerslist?: string | string[]; //| { [key: string]: any };
+  browserslist?: string | string[]; //| { [key: string]: any };
   name?: string;
   clean?: boolean;
+  externals?: string[];
+  extraBabelPresets?: PluginItem[];
+  extraBabelPlugins?: PluginItem[];
+  extraPostCSSPlugins?: PluginItem[];
 }
 
-// rome-ignore lint/suspicious/noEmptyInterface: <explanation>
-interface IApi extends IPluginAPI<Configuration> {}
+type WebpackConfiguration = BaseConfiguration<"webpack"> &
+  import("@clownpack/webpack").IConfiguration;
+
+export type Configuration = BaseConfiguration<"tsc"> | WebpackConfiguration;
+
+const a: Configuration = {
+  runner: "tsc",
+};

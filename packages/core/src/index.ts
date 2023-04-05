@@ -5,6 +5,8 @@ export { ApplyPluginsType, ServiceStage } from "./types";
 export type {
   Func,
   PluginItem,
+  PluginSetup,
+  PluginDefineOptions,
   IPlugin,
   IHook,
   ICommand,

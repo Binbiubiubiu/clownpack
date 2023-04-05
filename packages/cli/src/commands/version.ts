@@ -1,7 +1,7 @@
 import { FRAMEWORK_VERSION } from "../constants";
-import type { IApi } from "../types";
+import { definePlugin } from "../define";
 
-export default (api: IApi) => {
+export default definePlugin((api) => {
   api.registerCommand({
     name: "version",
     apply: () => {
@@ -10,4 +10,4 @@ export default (api: IApi) => {
       return FRAMEWORK_VERSION;
     },
   });
-};
+});

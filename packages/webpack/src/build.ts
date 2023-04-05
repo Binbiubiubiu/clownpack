@@ -5,7 +5,7 @@ import type { IBuildOptions } from "./types";
 export { build };
 
 async function build(opts: IBuildOptions) {
-  const webpackConfig = await getConfig(opts as IBuildOptions);
+  const webpackConfig = await getConfig(opts);
 
   const compiler = webpack(webpackConfig);
   let closeWatching: webpack.Watching["close"];
@@ -41,7 +41,7 @@ async function build(opts: IBuildOptions) {
 
     if (opts.watch) {
       const watchOptions =
-        (opts.watch === true ? false : opts.watch) || webpackConfig.watchOptions || {};
+        typeof opts.watch === "object" ? opts.watch : webpackConfig.watchOptions ?? {};
       compiler.watch(watchOptions, handler);
     } else {
       compiler.run(handler);

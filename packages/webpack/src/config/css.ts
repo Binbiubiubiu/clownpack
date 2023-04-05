@@ -1,10 +1,11 @@
 import Config from "webpack-5-chain";
 import type { IBuildOptions } from "../types";
-// import { getPostcssBrowsers } from "../utils";
+import path from "path";
 
 export { useCss };
 
 function useCss(config: Config, opts: IBuildOptions) {
+  const sourceMap = !!opts.devtool;
   const rulesConfig = [
     { name: "css", test: /\.css(\?.*)?$/ },
     {
@@ -22,6 +23,7 @@ function useCss(config: Config, opts: IBuildOptions) {
     {
       name: "sass",
       test: /\.(sass|scss)(\?.*)?$/,
+      implementation: require("sass"),
       loader: require.resolve("sass-loader"),
       loaderOptions: opts.sassLoader || {},
     },
@@ -52,26 +54,32 @@ function useCss(config: Config, opts: IBuildOptions) {
     ].filter(Boolean);
 
     for (const { rule, forceCssModule } of nestRulesConfig) {
-      if (opts.styleLoader) {
-        rule
-          .use("style-loader")
-          .loader(require.resolve("style-loader"))
-          .options({ base: 0, esModule: true, ...opts.styleLoader });
-      } else {
+      if (opts.cssExtract) {
+        if (opts.cssExtract === true) {
+          opts.cssExtract = {};
+        }
         rule
           .use("mini-css-extract-plugin")
           .loader(require("mini-css-extract-plugin").loader)
           .options({
-            publicPath: "./",
+            publicPath:
+              opts.publicPath && path.isAbsolute(opts.publicPath) ? opts.publicPath : "./",
             emit: true,
             esModule: true,
+            ...opts.cssExtract,
           });
+      } else {
+        rule
+          .use("style-loader")
+          .loader(require.resolve("style-loader"))
+          .options({ base: 0, esModule: true, ...opts.styleLoader });
       }
 
       rule
         .use("css-loader")
         .loader(require.resolve("css-loader"))
         .options({
+          sourceMap,
           importLoaders: 1,
           esModule: true,
           url: {
@@ -88,17 +96,15 @@ function useCss(config: Config, opts: IBuildOptions) {
             auto: forceCssModule ? undefined : true,
             ...opts.cssLoaderModules,
           },
+
           ...opts.cssLoader,
         });
 
-      const extraPostcssEnvOptions: any = {};
-      if (opts.browerslist) {
-        extraPostcssEnvOptions.browsers = opts.browerslist; // getPostcssBrowsers(opts),
-      }
       rule
         .use("postcss-loader")
         .loader(require.resolve("postcss-loader"))
         .options({
+          sourceMap,
           postcssOptions: {
             ident: "postcss",
             plugins: [
@@ -109,7 +115,7 @@ function useCss(config: Config, opts: IBuildOptions) {
                   ...opts.autoprefixer,
                 },
                 stage: 3,
-                ...extraPostcssEnvOptions,
+                ...(opts.browserslist && { browsers: opts.browserslist }),
               }),
               ...(opts.extraPostCSSPlugins || []),
             ],
@@ -127,7 +133,7 @@ function useCss(config: Config, opts: IBuildOptions) {
         rule
           .use(loader)
           .loader(resolvedLoader)
-          .options(loaderOptions || {});
+          .options(Object.assign({ sourceMap }, loaderOptions));
       }
     }
   }

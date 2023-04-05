@@ -1,36 +1,22 @@
-import browserslist from "browserslist";
+import { type TsConfigResult, browserslist, getTsconfig } from "@clownpack/helper";
 import path from "path";
-import { DEFAULT_CACHE_DIRECTORY, DEFAULT_TARGETS, SUPPORTED_ESBUILD_TARGETS } from "./constants";
-import type {
-  // IAnyObject,
-  IBuildOptions,
-} from "./types";
+import { DEFAULT_CACHE_DIRECTORY, SUPPORTED_ESBUILD_TARGETS } from "./constants";
+import type { IBuildOptions } from "./types";
 
-export {
-  getEsbuildTarget,
-  // getPostcssBrowsers,
-  // getBabelTargets,
-  getDefaultCacheDirectory,
-};
+export { loadTsConfig, getEsbuildTarget, getDefaultCacheDirectory };
 
-// function isString(targets: unknown): targets is string {
-//   return typeof targets === "string";
-// }
-
-// function isStrings(targets: unknown): targets is string[] {
-//   return Array.isArray(targets) && targets.every(isString);
-// }
+let _tsConfig: TsConfigResult["config"] | undefined;
+function loadTsConfig(opts: IBuildOptions) {
+  _tsConfig ??= getTsconfig(opts.cwd)?.config;
+}
 
 function getEsbuildTarget(opts: IBuildOptions): string[] {
-  // const targets = opts.targets || DEFAULT_TARGETS;
-
   const replaces: Record<string, string> = {
     ios_saf: "ios",
     android: "chrome",
   };
 
-  // if (isString(targets) || isStrings(targets)) {
-  const validTargets = browserslist(opts.browerslist)
+  const validTargets = browserslist(opts.browserslist)
     // `chrome 110` => ["chrome","110"]
     .map((t) => t.split(" "))
     // filter esbuild not support browers
@@ -53,35 +39,13 @@ function getEsbuildTarget(opts: IBuildOptions): string[] {
       obj[k] = v;
       return obj;
     }, {} as Record<string, string>);
-  // } else {
-  //   for (const key in validTargets) {
-  //     if (!SUPPORTED_ESBUILD_TARGETS.includes(key)) {
-  //       throw new Error(`Esbuild does not support targets ${key}`);
-  //     }
-  //   }
-  // }
-  return Object.keys(validTargets).map((k) => `${k}${validTargets[k]}`);
+
+  const targets = Object.keys(validTargets).map((k) => `${k}${validTargets[k]}`);
+  const module = _tsConfig?.compilerOptions?.target ?? "es2015";
+  // 提升 esbuild 压缩产物的兼容性
+  targets.push(module.toLocaleLowerCase());
+  return targets;
 }
-
-// function getPostcssBrowsers(opts: IBuildOptions) {
-//   const targets = opts.targets ?? DEFAULT_TARGETS;
-
-//   if (isString(targets) || isStrings(targets)) {
-//   return targets;
-//   }
-
-//   const obj = targets as IAnyObject;
-//   return (
-//     obj.browsers ||
-//     Object.keys(obj).map((key) => {
-//       return `${key} >= ${obj[key] === true ? "0" : obj[key]}`;
-//     })
-//   );
-// }
-
-// function getBabelTargets(opts: IBuildOptions) {
-//   return opts.targets ?? DEFAULT_TARGETS;
-// }
 
 function getDefaultCacheDirectory(cwd: string) {
   return path.join(cwd, "node_modules", ".cache", DEFAULT_CACHE_DIRECTORY);

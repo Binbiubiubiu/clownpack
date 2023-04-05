@@ -1,6 +1,7 @@
 import { defineConfig } from "@clownpack/cli";
 
 export default defineConfig({
-  plugins: [],
-  executor: "",
+  input: "",
+  module: "umd",
+  runner: "webpack",
 });

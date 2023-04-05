@@ -1,7 +1,7 @@
 import { Logger, yParser } from "@clownpack/helper";
 import { Service } from "@clownpack/core";
 import { CliCmd, FRAMEWORK_NAME } from "../constants";
-import { type Configuration, Env } from "../types";
+import { Env } from "../types";
 import { printFrameworkInfo } from "./utils";
 
 export async function run() {
@@ -21,7 +21,7 @@ export async function run() {
   if (process.env.DEBUG) {
     Logger.init(FRAMEWORK_NAME);
   }
-  const service = new Service<Configuration>({
+  const service = new Service({
     frameworkName: FRAMEWORK_NAME,
     cwd: process.cwd(),
     env: process.env.NODE_ENV,

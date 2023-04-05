@@ -1,7 +1,7 @@
 import { resolveSync } from "@clownpack/helper";
-import type { IApi } from "./types";
+import { definePlugin } from "./define";
 
-export default (api: IApi) => {
+export default definePlugin((api) => {
   return {
     plugins: [
       resolveSync("./commands/version"),
@@ -11,4 +11,4 @@ export default (api: IApi) => {
       resolveSync("./commands/build"),
     ],
   };
-};
+});

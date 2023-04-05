@@ -1,8 +1,8 @@
 import Config from "webpack-5-chain";
 import webpack from "webpack";
 import path from "path";
-import browserslist from "browserslist";
-import { DEFAULT_DEVTOOL, DEFAULT_OUTPUT_PATH } from "../constants";
+import { browserslist } from "@clownpack/helper";
+import { DEFAULT_DEVTOOL, DEFAULT_OUTPUT_PATH, DFEAULT_RESOLVE_EXTENSIONS } from "../constants";
 import { type IBuildOptions } from "../types";
 // rules
 import { useAssets } from "./assets";
@@ -18,7 +18,7 @@ import { useMiniCssExtractPlugin } from "./miniCssExtractPlugin";
 import { useCopyPlugin } from "./copyPlugin";
 import { useWebpackbar } from "./webpackbar";
 import { useSpeedMeasurePlugin } from "./speedMeasurePlugin";
-import { getDefaultCacheDirectory } from "../utils";
+import { getDefaultCacheDirectory, loadTsConfig } from "../utils";
 
 export { getConfig };
 
@@ -34,7 +34,7 @@ async function getConfig(opts: IBuildOptions) {
   config.stats("none");
 
   for (const key in opts.entry) {
-    config.entry(key).add(opts.entry[key]);
+    config.entry(key).add(path.resolve(opts.cwd, opts.entry[key]));
   }
 
   // devtool
@@ -62,17 +62,21 @@ async function getConfig(opts: IBuildOptions) {
     .end()
     .alias.merge(opts.alias || {})
     .end()
-    .extensions.merge([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json", ".wasm"])
+    .extensions.merge(DFEAULT_RESOLVE_EXTENSIONS)
     .end();
 
   config.externals(opts.externals || []);
 
-  // webpack 默认 target browerslist 优先
-  opts.browerslist ??= browserslist.loadConfig({ path: opts.cwd });
-  if (opts.browerslist?.length) {
-    process.env.BROWSERSLIST = ([] as string[]).concat(opts.browerslist ?? []).join(",");
-  }
+  loadTsConfig(opts);
 
+  // 设置默认的 browserslist
+  if (!opts.browserslist?.length) {
+    opts.browserslist =
+      browserslist(opts.browserslist, { path: opts.cwd }) ?? (browserslist.defaults as string[]);
+  }
+  // webpack 默认 target browserslist 优先
+  process.env.BROWSERSLIST = ([] as string[]).concat(opts.browserslist ?? []).join(",");
+  // config.target("browserslist");
   // config.target(["web", "es5"]);
 
   // config.experiments({

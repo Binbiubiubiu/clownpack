@@ -2,8 +2,8 @@
   "$schema": "http://json.schemastore.org/tsconfig",
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
+    "target": "ESNext",
+    "module": "CommonJS",
     "strict": true,
     "jsx": "preserve",
     "allowJs": true,
@@ -13,11 +13,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    },
     "lib": ["esnext", "dom", "dom.iterable"]
   },
-  "include": ["./src"]
+  "include": ["src", "global.d.ts"]
 }

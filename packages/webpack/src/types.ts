@@ -1,34 +1,33 @@
 import type { PluginItem } from "@clownpack/core";
-import type { Pattern } from "copy-webpack-plugin";
+import type { IAnyObject } from "@clownpack/helper";
 import type webpack from "webpack";
 import type Config from "webpack-5-chain";
 
-export { JSMinifier, CSSMinifier, Env };
-export type { IBuildOptions, IAnyObject, IPluginAPIWithWebpack };
-
-enum Env {
+export enum Env {
   development = "development",
   production = "production",
 }
 
-enum JSMinifier {
+export enum Transpiler {
+  babel = "babel",
+  swc = "swc",
+  esbuild = "esbuild",
+}
+
+export enum JSMinifier {
   terser = "terser",
   swc = "swc",
   esbuild = "esbuild",
   uglifyJs = "uglifyJs",
-  none = "none",
 }
 
-enum CSSMinifier {
+export enum CSSMinifier {
   esbuild = "esbuild",
   cssnano = "cssnano",
   parcelCSS = "parcelCSS",
-  none = "none",
 }
 
-type IAnyObject<Value = any> = Record<string, Value>;
-
-interface IBuildOptions {
+export interface IBuildOptions {
   devtool?: Config.DevTool;
   /**
    * 当前运行目录
@@ -45,7 +44,7 @@ interface IBuildOptions {
   /**
    * 支持平台
    */
-  browerslist?: string | string[];
+  browserslist?: string | string[];
   /**
    * 路径别名
    */
@@ -61,7 +60,7 @@ interface IBuildOptions {
   /**
    * copy插件配置
    */
-  copy?: Pattern[];
+  copy?: import("copy-webpack-plugin").Pattern[];
   /**
    * 全局变量定义
    */
@@ -75,9 +74,17 @@ interface IBuildOptions {
    */
   analyze?: boolean | IAnyObject;
   /**
+   * js编译工具
+   */
+  transpiler?: `${Transpiler}`;
+  /**
+   * js编译工具配置
+   */
+  transpilerOptions?: IAnyObject;
+  /**
    * css代码压缩工具
    */
-  cssMinifier?: `${CSSMinifier}`;
+  cssMinifier?: boolean | `${CSSMinifier}`;
   /**
    * css代码压缩配置
    */
@@ -85,7 +92,7 @@ interface IBuildOptions {
   /**
    * js代码压缩工具
    */
-  jsMinifier?: `${JSMinifier}`;
+  jsMinifier?: boolean | `${JSMinifier}`;
   /**
    * js代码压缩配置
    */
@@ -120,6 +127,13 @@ interface IBuildOptions {
    */
   styleLoader?: IAnyObject;
   /**
+   * css是否单独抽离独立文件
+   */
+  cssExtract?:
+    | boolean
+    | (import("mini-css-extract-plugin").PluginOptions &
+        import("mini-css-extract-plugin").LoaderOptions);
+  /**
    * css 配置
    */
   cssLoader?: IAnyObject;
@@ -139,7 +153,7 @@ interface IBuildOptions {
   /**
    * 额外postcss插件
    */
-  extraPostCSSPlugins?: PluginItem;
+  extraPostCSSPlugins?: PluginItem[];
   /**
    * 名称
    */
@@ -156,15 +170,14 @@ interface IBuildOptions {
    * 资源是否hash
    */
   hash?: boolean;
-
   /**
    * 额外babel预设
    */
-  extraBabelPresets?: any[];
+  extraBabelPresets?: PluginItem[];
   /**
    * 额外babel插件
    */
-  extraBabelPlugins?: any[];
+  extraBabelPlugins?: PluginItem[];
   /**
    * webpack-chain 配置
    */
@@ -190,7 +203,8 @@ interface IBuildOptions {
   }): void | Promise<void>;
 }
 
-interface IPluginAPIWithWebpack {
-  chainWebpack(fn: IBuildOptions["chainWebpack"]): void;
-  modifyWebpackConfig(fn: IBuildOptions["modifyWebpackConfig"]): void;
-}
+// rome-ignore lint/suspicious/noEmptyInterface: <explanation>
+export interface IPluginAPI extends Pick<IBuildOptions, "chainWebpack" | "modifyWebpackConfig"> {}
+// rome-ignore lint/suspicious/noEmptyInterface: <explanation>
+export interface IConfiguration
+  extends Pick<IBuildOptions, "chainWebpack" | "modifyWebpackConfig"> {}

@@ -24,14 +24,14 @@
     "@clownpack/core": "workspace:*",
     "@clownpack/helper": "workspace:*"
   },
+  "devDependencies": {
+    "@clownpack/webpack": "workspace:*"
+  },
   "peerDependencies": {
     "@clownpack/webpack": "workspace:*"
   },
   "peerDependenciesMeta": {
     "@clownpack/webpack": {
-      "optional": true
-    },
-    "@clownpack/rspack": {
       "optional": true
     }
   },

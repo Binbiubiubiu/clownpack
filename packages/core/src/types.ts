@@ -1,21 +1,8 @@
+import type { IAnyObject } from "@clownpack/helper";
 import { PluginAPI } from "./pluginAPI";
 import type { Service } from "./service";
 
-export { ServiceStage, ApplyPluginsType };
-export type {
-  Func,
-  PluginItem,
-  IPlugin,
-  IHook,
-  ICommand,
-  IEvent,
-  IModify,
-  IAdd,
-  IPluginAPI,
-  IConfiguration,
-};
-
-enum ServiceStage {
+export enum ServiceStage {
   uninitialized,
   init,
   initPlugins,
@@ -24,26 +11,39 @@ enum ServiceStage {
   runCommand,
 }
 
-enum ApplyPluginsType {
+export enum ApplyPluginsType {
   add = "add",
   modify = "modify",
   event = "event",
 }
 
-type Func = (...args: any[]) => any;
-type PluginItem = string | [string, Record<string, any>];
-type PluginApply<Options> = (api: PluginAPI, options: Options) => { plugins: PluginItem[] } | void;
+export type Func = (...args: any[]) => any;
+export type PluginItem = string | [string, IAnyObject];
 
-interface IPlugin<Options = Record<string, any>> {
+export type PluginSetup<IConfig extends IConfiguration, Options> = (
+  api: IPluginAPI<IConfig>,
+  options?: Options,
+) => {
+  plugins: PluginItem[];
+} | void;
+
+export type PluginDefineOptions<C extends IConfiguration, T> =
+  | {
+      name?: string;
+      setup: PluginSetup<C, T>;
+    }
+  | PluginSetup<C, T>;
+
+export interface IPlugin<IConfig extends IConfiguration = IConfiguration, Options = IAnyObject> {
   // the plugin's name in the userConfig
   name: string;
   // absolute path
   id: string;
   options: Options;
-  apply: () => PluginApply<Options>;
+  setup: PluginSetup<IConfig, Options>;
 }
 
-interface IHook {
+export interface IHook {
   name: string;
   apply: Func;
   plugin: IPlugin;
@@ -51,7 +51,7 @@ interface IHook {
   before?: string;
 }
 
-interface ICommand {
+export interface ICommand {
   name: string;
   apply: Func;
   alias?: string | string[];
@@ -62,7 +62,7 @@ interface ICommand {
   isAlias?: boolean;
 }
 
-interface IEvent<T> {
+export interface IEvent<T> {
   (fn: { (args: T): void }): void;
   (args: {
     fn: { (args: T): void };
@@ -72,7 +72,7 @@ interface IEvent<T> {
   }): void;
 }
 
-interface IModify<T, U> {
+export interface IModify<T, U> {
   (fn: { (initialValue: T, args: U): T }): void;
   (fn: { (initialValue: T, args: U): Promise<T> }): void;
   (args: {
@@ -89,7 +89,7 @@ interface IModify<T, U> {
   }): void;
 }
 
-interface IAdd<T, U> {
+export interface IAdd<T, U> {
   (fn: { (args: T): U | U[] }): void;
   (fn: { (args: T): Promise<U | U[]> }): void;
   (args: {
@@ -108,15 +108,14 @@ interface IAdd<T, U> {
   }): void;
 }
 
-type NeedProxyPluginAPI =
+type _needProxyPluginAPI =
   | "register"
   | "registerCommand"
   | "registerMethod"
   | "addPluginOptsSchema"
   | "skipPlugins";
 
-interface IPluginAPI<T extends IConfiguration = IConfiguration>
-  extends Pick<PluginAPI, NeedProxyPluginAPI> {
+export interface IPluginAPI<T extends IConfiguration> extends Pick<PluginAPI, _needProxyPluginAPI> {
   cwd: typeof Service.prototype.cwd;
   env: typeof Service.prototype.env;
   command: typeof Service.prototype.command;
@@ -138,6 +137,6 @@ interface IPluginAPI<T extends IConfiguration = IConfiguration>
   modifyConfig: IModify<T, null>;
 }
 
-interface IConfiguration {
+export interface IConfiguration {
   plugins?: PluginItem[];
 }

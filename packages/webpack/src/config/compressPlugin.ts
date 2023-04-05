@@ -1,32 +1,44 @@
 import TerserPlugin from "terser-webpack-plugin";
 import CSSMinimizerWebpackPlugin from "css-minimizer-webpack-plugin";
 import Config from "webpack-5-chain";
-import { Env, CSSMinifier, JSMinifier, type IAnyObject, type IBuildOptions } from "../types";
+import type { IAnyObject } from "@clownpack/helper";
+import { Env, CSSMinifier, JSMinifier, type IBuildOptions } from "../types";
 import { getEsbuildTarget } from "../utils";
-import { DEFAULT_TARGETS } from "../constants";
 
 export { useCompressPlugin };
 
-function useCompressPlugin(config: Config, opts: IBuildOptions) {
-  const jsMinifier = opts.jsMinifier || JSMinifier.esbuild;
-  const cssMinifier = opts.cssMinifier || CSSMinifier.esbuild;
+function defaultMinifier(
+  v: IBuildOptions["jsMinifier"],
+  dv: `${JSMinifier}`,
+): false | `${JSMinifier}`;
+function defaultMinifier(
+  v: IBuildOptions["cssMinifier"],
+  dv: `${CSSMinifier}`,
+): false | `${CSSMinifier}`;
+function defaultMinifier(
+  v: IBuildOptions["jsMinifier"] | IBuildOptions["cssMinifier"],
+  dv: `${JSMinifier}` | `${CSSMinifier}`,
+): false | `${JSMinifier}` | `${CSSMinifier}` {
+  return v === true ? dv : v ?? dv;
+}
 
-  if (
-    opts.env === Env.development ||
-    (jsMinifier === JSMinifier.none && cssMinifier === CSSMinifier.none)
-  ) {
+function useCompressPlugin(config: Config, opts: IBuildOptions) {
+  const jsMinifier = defaultMinifier(opts.jsMinifier, JSMinifier.esbuild);
+  const cssMinifier = defaultMinifier(opts.cssMinifier, CSSMinifier.esbuild);
+
+  if (opts.env === Env.development || (jsMinifier === false && cssMinifier === false)) {
     config.optimization.minimize(false);
     return;
   }
 
   const esbuildTarget = getEsbuildTarget(opts);
-  // 提升 esbuild 压缩产物的兼容性，比如不出现 ?? 这种语法
-  // esbuildTarget.push("es2015");
 
   config.optimization.minimize(true);
   let minify;
   let terserOptions: IAnyObject | undefined;
   switch (jsMinifier) {
+    case false:
+      break;
     case JSMinifier.esbuild:
       minify = TerserPlugin.esbuildMinify;
       terserOptions = {
@@ -54,8 +66,6 @@ function useCompressPlugin(config: Config, opts: IBuildOptions) {
         },
       };
       break;
-    case JSMinifier.none:
-      break;
     default:
       throw new Error(`Unsupported jsMinifier ${jsMinifier}.`);
   }
@@ -77,6 +87,8 @@ function useCompressPlugin(config: Config, opts: IBuildOptions) {
   let cssMinify: any;
   let minimizerOptions: IAnyObject | undefined;
   switch (cssMinifier) {
+    case false:
+      break;
     case CSSMinifier.esbuild:
       cssMinify = CSSMinimizerWebpackPlugin.esbuildMinify;
       minimizerOptions = {
@@ -85,11 +97,12 @@ function useCompressPlugin(config: Config, opts: IBuildOptions) {
       break;
     case CSSMinifier.cssnano:
       cssMinify = CSSMinimizerWebpackPlugin.cssnanoMinify;
+      minimizerOptions = {
+        inline: false,
+      };
       break;
     case CSSMinifier.parcelCSS:
       cssMinify = CSSMinimizerWebpackPlugin.parcelCssMinify;
-      break;
-    case CSSMinifier.none:
       break;
     default:
       throw new Error(`Unsupported cssMinifier ${cssMinifier}.`);
