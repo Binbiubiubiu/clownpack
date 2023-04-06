@@ -1,7 +1,5 @@
 import debug from "debug";
 
-export { Logger };
-
 enum Level {
   error = 1,
   info,
@@ -12,7 +10,10 @@ enum Level {
 
 type LevelKey = keyof typeof Level;
 
-interface ILogger {
+/**
+ * @public
+ */
+export interface ILogger {
   trace(formatter: any, ...args: any[]): void;
   debug(formatter: any, ...args: any[]): void;
   warn(formatter: any, ...args: any[]): void;
@@ -20,7 +21,42 @@ interface ILogger {
   error(formatter: any, ...args: any[]): void;
 }
 
-class Logger implements ILogger {
+const DefaultHandler: ILogger = {
+  trace: () => {},
+  debug: () => {},
+  warn: () => {},
+  info: () => {},
+  error: () => {},
+};
+
+/**
+ * @public
+ */
+export class Logger {
+  static _handler: ILogger = DefaultHandler;
+
+  static init(namespace: string) {
+    return (this._handler ||= new DebugHandler(namespace));
+  }
+
+  static error(formatter: any, ...args: any[]): void {
+    this._handler.error(formatter, ...args);
+  }
+  static info(formatter: any, ...args: any[]): void {
+    this._handler.info(formatter, ...args);
+  }
+  static warn(formatter: any, ...args: any[]): void {
+    this._handler.warn(formatter, ...args);
+  }
+  static debug(formatter: any, ...args: any[]): void {
+    this._handler.debug(formatter, ...args);
+  }
+  static trace(formatter: any, ...args: any[]): void {
+    this._handler.trace(formatter, ...args);
+  }
+}
+
+class DebugHandler implements ILogger {
   private base: debug.Debugger;
   private debuggers: Array<debug.Debugger> = [];
   constructor(namespace: string) {
@@ -53,27 +89,5 @@ class Logger implements ILogger {
   }
   trace(formatter: any, ...args: any[]): void {
     this.debuggers[Level.trace]?.(formatter, ...args);
-  }
-
-  static error(formatter: any, ...args: any[]): void {
-    Logger.instance?.error?.(formatter, ...args);
-  }
-  static info(formatter: any, ...args: any[]): void {
-    Logger.instance?.info?.(formatter, ...args);
-  }
-  static warn(formatter: any, ...args: any[]): void {
-    Logger.instance?.warn?.(formatter, ...args);
-  }
-  static debug(formatter: any, ...args: any[]): void {
-    Logger.instance?.debug?.(formatter, ...args);
-  }
-  static trace(formatter: any, ...args: any[]): void {
-    Logger.instance?.trace?.(formatter, ...args);
-  }
-
-  static instance: Logger;
-
-  static init(namespace: string) {
-    return (Logger.instance ||= new Logger(namespace));
   }
 }

@@ -11,7 +11,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc && api-extractor run --typescript-compiler-folder=../../node_modules/typescript"
   },
   "dependencies": {
     "@clownpack/helper": "workspace:*",
@@ -19,7 +19,7 @@
     "dotenv-expand": "10.0.0",
     "tapable": "2.2.1",
     "zod": "3.21.4",
-    "zod-validation-error": "1.1.0"
+    "zod-validation-error": "1.2.1"
   },
   "packageManager": "pnpm@8.1.0",
   "publishConfig": {

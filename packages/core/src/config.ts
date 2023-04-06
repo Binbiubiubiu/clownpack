@@ -4,7 +4,10 @@ import { DEFAULT_CONFIG_EXTENSIONS, DEFAULT_FRAMEWORK_NAME, DEFAULT_NODE_ENV } f
 import { merge, getModuleDefaultExport, useEsbuildRegisterEffect } from "@clownpack/helper";
 import { localEnvSuffix } from "./utils";
 
-interface IConfigOptions {
+/**
+ * @public
+ */
+export interface IConfigOptions {
   name: string;
   cwd: string;
   env: string;
@@ -13,11 +16,17 @@ interface IConfigOptions {
   defaultConfigFiles?: string[] | ((ext: string) => string);
 }
 
+/**
+ * @public
+ */
 export interface IConfigProvider<T> {
   getUserConfig(): T;
   getConfigFiles(): string[];
 }
 
+/**
+ * @public
+ */
 export class DefaultConfigProvider<T> implements IConfigProvider<T> {
   private baseConfigFile: string | null = null;
   private readonly options: IConfigOptions;

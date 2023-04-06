@@ -1,6 +1,10 @@
 import type { IConfiguration, IPluginAPI } from "@clownpack/core";
 
-export default function (api: IPluginAPI<IConfiguration>) {
+/**
+ * webpack 插件
+ * @public
+ */
+export default function webpackPlugin(api: IPluginAPI<IConfiguration>) {
   ["chainWebpack", "modifyWebpackConfig"].forEach((name) => {
     api.registerMethod({
       name,
@@ -9,4 +13,5 @@ export default function (api: IPluginAPI<IConfiguration>) {
 }
 
 export { build } from "./build";
-export type { IPluginAPI, IConfiguration } from "./types";
+export type { IPluginAPI, IConfiguration, IBuildOptions } from "./types";
+export { Env, Transpiler, JSMinifier, CSSMinifier } from "./types";

@@ -2,9 +2,11 @@ import webpack from "webpack";
 import { getConfig } from "./config";
 import type { IBuildOptions } from "./types";
 
-export { build };
-
-async function build(opts: IBuildOptions) {
+/**
+ * webpack 打包命令
+ * @public
+ */
+export async function build(opts: IBuildOptions) {
   const webpackConfig = await getConfig(opts);
 
   const compiler = webpack(webpackConfig);

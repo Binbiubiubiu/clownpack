@@ -1,22 +1,34 @@
 import type { IConfiguration, PluginItem } from "@clownpack/core";
-import { type } from "os";
 
+/**
+ * @public
+ */
 export enum Env {
   development = "development",
   production = "production",
 }
 
+/**
+ * @public
+ */
 export enum Format {
   cjs = "cjs",
   esm = "esm",
   umd = "umd",
 }
 
+/**
+ * @public
+ */
 export enum Runner {
   webpack = "webpack",
   tsc = "tsc",
 }
-interface BaseConfiguration<T> extends IConfiguration {
+
+/**
+ * @public
+ */
+export interface BaseConfiguration<T> extends IConfiguration {
   runner: T;
   input?: string | { [key: string]: string };
   format?: `${Format}`;
@@ -30,11 +42,13 @@ interface BaseConfiguration<T> extends IConfiguration {
   extraPostCSSPlugins?: PluginItem[];
 }
 
-type WebpackConfiguration = BaseConfiguration<"webpack"> &
+/**
+ * @public
+ */
+export type WebpackConfiguration = BaseConfiguration<"webpack"> &
   import("@clownpack/webpack").IConfiguration;
 
+/**
+ * @public
+ */
 export type Configuration = BaseConfiguration<"tsc"> | WebpackConfiguration;
-
-const a: Configuration = {
-  runner: "tsc",
-};

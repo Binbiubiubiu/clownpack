@@ -11,7 +11,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc && api-extractor run --typescript-compiler-folder=../../node_modules/typescript"
   },
   "packageManager": "pnpm@8.1.0",
   "publishConfig": {
@@ -30,6 +30,6 @@
     "@clownpack/helper": "workspace:*"
   },
   "devDependencies": {
-    "esbuild": "0.17.12"
+    "esbuild": "0.17.15"
   }
 }

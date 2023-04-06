@@ -24,11 +24,17 @@ import {
 } from "./types";
 import { Service } from "./service";
 
-interface IPluginAPIOptions {
+/**
+ * @public
+ */
+export interface IPluginAPIOptions {
   service: Service<IConfiguration>;
   plugin: IPlugin;
 }
 
+/**
+ * @public
+ */
 export class PluginAPI {
   service: Service<IConfiguration>;
   plugin: IPlugin;

@@ -2,19 +2,26 @@ import resolve from "resolve";
 import deepmerge from "@fastify/deepmerge";
 import browserslist from "browserslist";
 import { getTsconfig } from "get-tsconfig";
+import * as colorette from "colorette";
 
-export { type TsConfigResult, getTsconfig } from "get-tsconfig";
+export type { TsConfigResult } from "get-tsconfig";
 export { default as yParser } from "yargs-parser";
-export * as colorette from "colorette";
+
 export { sync as resolveSync } from "resolve";
 
-export { browserslist };
+export { browserslist, getTsconfig, colorette };
 
 export * from "./logger";
 export * from "./types";
 
+/**
+ * @public
+ */
 export const merge: ReturnType<typeof deepmerge> = deepmerge();
 
+/**
+ * @public
+ */
 export function useEsbuildRegisterEffect(
   effect: () => void,
   ids?: string[],
@@ -22,17 +29,28 @@ export function useEsbuildRegisterEffect(
 ) {
   const esbuild: typeof import("esbuild-register/dist/node") = require("esbuild-register/dist/node");
   const { unregister } = esbuild.register({
-    ...(ids && { hookMatcher: (fileName) => ids!.includes(fileName) }),
+    ...(Array.isArray(ids) && { hookMatcher: (fileName) => ids.includes(fileName) }),
     ...overrides,
   });
   effect();
+  if (Array.isArray(ids)) {
+    for (const id of ids) {
+      delete require.cache[id];
+    }
+  }
   unregister();
 }
 
+/**
+ * @public
+ */
 export function getModuleDefaultExport(exports: any) {
   return exports?.__esModule ? exports.default : exports;
 }
 
+/**
+ * @public
+ */
 export function getModuleAbsPath(opts: { path: string; cwd?: string; type?: string } | string) {
   if (typeof opts === "string") {
     opts = {
@@ -49,10 +67,16 @@ export function getModuleAbsPath(opts: { path: string; cwd?: string; type?: stri
   }
 }
 
+/**
+ * @public
+ */
 export function importLazy<R>(name: string, opts?: { cwd?: string }): Promise<R> {
   return import(resolve.sync(name, { basedir: opts?.cwd ?? process.cwd() }));
 }
 
+/**
+ * @public
+ */
 export function getPlatformInfo(opts?: {
   targets?: string | string[] | Record<string, number>;
   replaces?: Record<string, string>;

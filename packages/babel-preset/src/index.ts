@@ -2,6 +2,7 @@ import { IOptions } from "./types";
 import { getCorejsVersion, getDepVersion, pkgPath } from "./utils";
 
 export { getCorejsVersion };
+export type { IOptions };
 
 export default (_: any, opts: IOptions) => {
   return {

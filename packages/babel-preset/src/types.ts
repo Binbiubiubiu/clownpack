@@ -1,6 +1,7 @@
-export { IOptions };
-
-interface IOptions {
+/**
+ * @public
+ */
+export interface IOptions {
   presetEnv?: any;
   presetReact?: any;
   presetTypescript?: any;

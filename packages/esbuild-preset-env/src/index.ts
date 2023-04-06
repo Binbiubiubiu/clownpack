@@ -1,6 +1,9 @@
 import { Plugin, Platform } from "esbuild";
 import { Logger, getPlatformInfo } from "@clownpack/helper";
 
+/**
+ * @public
+ */
 export const SUPPORTED_ESBUILD_TARGETS = [
   "chrome",
   "edge",
@@ -16,6 +19,9 @@ export const SUPPORTED_ESBUILD_TARGETS = [
   "rhino",
 ];
 
+/**
+ * @public
+ */
 export interface IOptions {
   targets?: string | string[] | Record<string, number>;
   configPath?: string;
@@ -23,6 +29,9 @@ export interface IOptions {
   browserslistEnv?: string;
 }
 
+/**
+ * @public
+ */
 export function getEsbuildTargets(options: IOptions = {}) {
   const { targets, esTarget } = getPlatformInfo({
     ...options,
@@ -58,7 +67,10 @@ export function getEsbuildTargets(options: IOptions = {}) {
   };
 }
 
-export default function (opts: IOptions = {}): Plugin {
+/**
+ * @public
+ */
+export default function esbuildPresetEnv(opts: IOptions = {}): Plugin {
   return {
     name: "esbuild-preset-env",
     setup(build) {

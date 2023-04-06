@@ -17,9 +17,10 @@ import { DefaultConfigProvider, type IConfigProvider } from "./config";
 import { PluginAPI } from "./pluginAPI";
 import { DEFAULT_NODE_ENV } from "./constants";
 
-export { Service };
-
-interface IServiceOptions<T> {
+/**
+ * @public
+ */
+export interface IServiceOptions<T> {
   frameworkName: string;
   cwd?: string;
   env?: string;
@@ -27,7 +28,10 @@ interface IServiceOptions<T> {
   plugins?: PluginItem[];
 }
 
-class Service<T extends IConfiguration> {
+/**
+ * @public
+ */
+export class Service<T extends IConfiguration> {
   readonly cwd: string;
   readonly env: string;
   readonly customEnv: string | undefined;

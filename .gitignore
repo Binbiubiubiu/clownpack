@@ -1,4 +1,5 @@
 dist
+dist-dts
 tmp
 /out-tsc
 

@@ -3,7 +3,9 @@
   "compilerOptions": {
     "module": "commonjs",
     "outDir": "./dist",
-    "declaration": true
+    "declarationDir": "./dist-dts",
+    "declaration": true,
+    "declarationMap": true
   },
-  "include": ["./src", "./types"]
+  "include": ["./src"]
 }

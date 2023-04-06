@@ -1,1 +1,4 @@
-export type IAnyObject<Value = any> = Record<string, Value>;
+/**
+ * @public
+ */
+export type IAnyObject = Record<string, any>;

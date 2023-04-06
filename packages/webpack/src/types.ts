@@ -3,17 +3,29 @@ import type { IAnyObject } from "@clownpack/helper";
 import type webpack from "webpack";
 import type Config from "webpack-5-chain";
 
+/**
+ * 打包环境变量
+ * @public
+ */
 export enum Env {
   development = "development",
   production = "production",
 }
 
+/**
+ * 打包转换器
+ * @public
+ */
 export enum Transpiler {
   babel = "babel",
   swc = "swc",
   esbuild = "esbuild",
 }
 
+/**
+ * js压缩器
+ * @public
+ */
 export enum JSMinifier {
   terser = "terser",
   swc = "swc",
@@ -21,12 +33,19 @@ export enum JSMinifier {
   uglifyJs = "uglifyJs",
 }
 
+/**
+ * css压缩器
+ * @public
+ */
 export enum CSSMinifier {
   esbuild = "esbuild",
   cssnano = "cssnano",
   parcelCSS = "parcelCSS",
 }
 
+/**
+ * @public
+ */
 export interface IBuildOptions {
   devtool?: Config.DevTool;
   /**
@@ -207,8 +226,16 @@ export interface IBuildOptions {
   }): void | Promise<void>;
 }
 
+/**
+ * 配合webpack插件的插件方法
+ * @public
+ */
 // rome-ignore lint/suspicious/noEmptyInterface: <explanation>
 export interface IPluginAPI extends Pick<IBuildOptions, "chainWebpack" | "modifyWebpackConfig"> {}
+/**
+ * 配合webpack插件的项目配置
+ * @public
+ */
 // rome-ignore lint/suspicious/noEmptyInterface: <explanation>
 export interface IConfiguration
   extends Pick<IBuildOptions, "chainWebpack" | "modifyWebpackConfig"> {}

@@ -4,6 +4,10 @@ export { pkgPath, getCorejsVersion, getDepVersion };
 
 const pkgPath = path.join(__dirname, "..");
 
+/**
+ *
+ * @public
+ */
 function getCorejsVersion() {
   try {
     return getDepVersion("core-js").split(".").shift().replace(/[^0-9]/gi, "");

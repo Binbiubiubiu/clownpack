@@ -15,9 +15,7 @@
     "bin"
   ],
   "scripts": {
-    "build": "pnpm clean && tsc",
-    "dev": "pnpm build --watch",
-    "clean": "rimraf ./dist",
+    "build": "tsc && api-extractor run --typescript-compiler-folder=../../node_modules/typescript",
     "play": "pnpm build && pnpm --filter=playground run clownpack "
   },
   "dependencies": {
