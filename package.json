@@ -11,7 +11,7 @@
     "test": "turbo run test",
     "lint": "rome ci . && prettier --check .",
     "format": "rome format --write . && prettier --write .",
-    "clean": "rimraf --glob  .turbo ./node_modules/.cache/turbo ./packages/*/{.turbo,dist,coverage,*.lcov}",
+    "clean": "rimraf --glob  .turbo ./node_modules/.cache/turbo ./packages/*/{.turbo,dist,dist-dts,coverage,*.lcov}",
     "play": "pnpm build && pnpm --filter=playground run clownpack ",
     "release": "pnpm build && changeset publish",
     "publish-packages": "pnpm build && changeset version && changeset publish",

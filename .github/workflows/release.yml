@@ -10,7 +10,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: github.repository == 'Binbiubiubiu/tqt'
+    if: github.repository == 'Binbiubiubiu/clownpack'
     steps:
       - uses: actions/checkout@v3
         with:
