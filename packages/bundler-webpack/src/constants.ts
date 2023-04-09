@@ -5,6 +5,8 @@ export const DEFAULT_CACHE_DIRECTORY = "clownpack-webapck";
 export const DFEAULT_RESOLVE_EXTENSIONS = [
   ".ts",
   ".tsx",
+  ".mts",
+  ".cts",
   ".js",
   ".jsx",
   ".mjs",

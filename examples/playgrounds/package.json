@@ -15,7 +15,7 @@
   "license": "ISC",
   "devDependencies": {
     "@clownpack/cli": "workspace:*",
-    "@clownpack/webpack": "workspace:*"
+    "@clownpack/bundler-webpack": "workspace:*"
   },
   "dependencies": {
     "vue": "^2.6",

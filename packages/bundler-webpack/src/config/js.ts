@@ -1,5 +1,5 @@
 import Config from "webpack-5-chain";
-import { getEsbuildTargets } from "@clownpack/esbuild-preset-env";
+import { getEsbuildTargets } from "@clownpack/esbuild-preset-env/helper";
 import { IBuildOptions, Transpiler } from "../types";
 
 export { useJs };
@@ -15,12 +15,25 @@ function useJs(config: Config, opts: IBuildOptions) {
       .end()
       .exclude.add(/node_modules/)
       .end(),
-    config.module.rule("jsx").test(/\.(jsx|ts|tsx)$/),
+    config.module.rule("jsx").test(/\.(jsx|ts|tsx|mts|cts)$/),
   ];
 
   for (const rule of srcRules) {
     rule.resolve.fullySpecified(false);
     if (opts.transpiler === Transpiler.babel) {
+      const presetOptions = {
+        presetEnv: {},
+        // presetReact: {},
+        presetTypeScript: {},
+        pluginTransformRuntime: {},
+      };
+      // use @babel/runtime in workspace
+      if (opts.pkg?.dependencies?.["@babel/runtime"]) {
+        presetOptions.pluginTransformRuntime = {
+          absoluteRuntime: false,
+          version: opts.pkg.dependencies?.["@babel/runtime"],
+        };
+      }
       rule
         .use("babel-loader")
         .loader(require.resolve("babel-loader"))
@@ -38,15 +51,7 @@ function useJs(config: Config, opts: IBuildOptions) {
           //   privateFieldsAsProperties: true,
           // },
           presets: [
-            [
-              require.resolve("@clownpack/babel-preset"),
-              {
-                presetEnv: {},
-                presetReact: {},
-                presetTypeScript: {},
-                pluginTransformRuntime: {},
-              },
-            ],
+            [require.resolve("@clownpack/babel-preset"), presetOptions],
             ...(opts.extraBabelPresets || []),
           ],
           plugins: opts.extraBabelPlugins || [],

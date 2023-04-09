@@ -1,7 +1,7 @@
 import { AsyncSeriesWaterfallHook } from "tapable";
 import path from "path";
 import assert from "assert";
-import { colorette, resolveSync, type yParser } from "@clownpack/helper";
+import { type IPkg, colorette, type yParser } from "@clownpack/helper";
 import { loadEnv } from "./utils";
 import {
   ApplyPluginsType,
@@ -48,13 +48,7 @@ export class Service<T extends IConfiguration> {
   stage: ServiceStage = ServiceStage.uninitialized;
   configProvider: IConfigProvider<T>;
   pkgPath: string = "";
-  pkg: {
-    name?: string;
-    version?: string;
-    dependencies?: Record<string, string>;
-    devDependencies?: Record<string, string>;
-    [key: string]: any;
-  } = {};
+  pkg: IPkg = {};
   options: IServiceOptions<T>;
 
   constructor(opts: string | IServiceOptions<T>) {
@@ -106,7 +100,7 @@ export class Service<T extends IConfiguration> {
     const plugins = PluginAPI.resolvePlugins({
       cwd: this.cwd,
       plugins: [
-        resolveSync("./preset"),
+        require.resolve("./preset"),
         ...(this.options.plugins || []),
         ...(this.userConfig.plugins || []),
       ],

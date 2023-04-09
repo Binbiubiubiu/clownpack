@@ -2,7 +2,7 @@ import TerserPlugin from "terser-webpack-plugin";
 import CSSMinimizerWebpackPlugin from "css-minimizer-webpack-plugin";
 import Config from "webpack-5-chain";
 import type { IAnyObject } from "@clownpack/helper";
-import { getEsbuildTargets } from "@clownpack/esbuild-preset-env";
+import { getEsbuildTargets } from "@clownpack/esbuild-preset-env/helper";
 import { Env, CSSMinifier, JSMinifier, type IBuildOptions } from "../types";
 
 function defaultMinifier(

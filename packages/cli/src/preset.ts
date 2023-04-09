@@ -1,14 +1,14 @@
-import { resolveSync } from "@clownpack/helper";
 import { definePlugin } from "./define";
 
 export default definePlugin((api) => {
   return {
     plugins: [
-      resolveSync("./commands/version"),
-      resolveSync("./commands/help"),
+      require.resolve("./commands/version"),
+      require.resolve("./commands/help"),
+      require.resolve("./commands/dev"),
+      require.resolve("./commands/build"),
 
-      resolveSync("./commands/dev"),
-      resolveSync("./commands/build"),
+      require.resolve("./methods/webpack"),
     ],
   };
 });

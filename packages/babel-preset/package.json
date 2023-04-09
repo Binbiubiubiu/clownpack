@@ -7,11 +7,30 @@
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./helper": {
+      "types": "./dist/helper.d.ts",
+      "default": "./dist/helper.js"
+    },
+    "./types": "./dist/types.d.ts"
+  },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc && api-extractor run --typescript-compiler-folder=../../node_modules/typescript"
+    "build": "tsc"
   },
   "packageManager": "pnpm@8.1.0",
   "publishConfig": {

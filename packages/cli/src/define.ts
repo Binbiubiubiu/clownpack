@@ -1,6 +1,6 @@
 import type { IAnyObject } from "@clownpack/helper";
 import type { PluginDefineOptions } from "@clownpack/core";
-import type { Configuration } from "./types";
+import type { Configuration, IApi } from "./types";
 
 /**
  * @public
@@ -12,6 +12,6 @@ export function defineConfig(config: Configuration) {
 /**
  * @public
  */
-export function definePlugin<T = IAnyObject>(options: PluginDefineOptions<Configuration, T>) {
+export function definePlugin<T = IAnyObject>(options: PluginDefineOptions<IApi, T>) {
   return options;
 }

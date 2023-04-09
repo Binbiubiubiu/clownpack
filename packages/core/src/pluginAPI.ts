@@ -189,7 +189,7 @@ export class PluginAPI {
     return map;
   }
 
-  static resolvePlugins<T extends IConfiguration>(opts: {
+  static resolvePlugins<T>(opts: {
     cwd: string;
     plugins?: PluginItem[];
   }): IPlugin<T>[] {
@@ -226,10 +226,7 @@ export class PluginAPI {
     });
   }
 
-  static checkPluginOpts<T extends IConfiguration>(
-    plugin: IPlugin<T>,
-    generator: typeof PluginAPI.prototype.optsSchema,
-  ) {
+  static checkPluginOpts<T>(plugin: IPlugin<T>, generator: typeof PluginAPI.prototype.optsSchema) {
     const schema = generator?.(zod);
     if (schema) {
       assert(

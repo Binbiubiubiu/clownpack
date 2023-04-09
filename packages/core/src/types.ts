@@ -36,8 +36,8 @@ export type PluginItem = string | [string, IAnyObject];
 /**
  * @public
  */
-export type PluginSetup<IConfig extends IConfiguration, Options> = (
-  api: IPluginAPI<IConfig>,
+export type PluginSetup<T, Options> = (
+  api: T,
   options?: Options,
 ) => {
   plugins: PluginItem[];
@@ -46,23 +46,23 @@ export type PluginSetup<IConfig extends IConfiguration, Options> = (
 /**
  * @public
  */
-export type PluginDefineOptions<C extends IConfiguration, T> =
+export type PluginDefineOptions<T, E> =
   | {
       name?: string;
-      setup: PluginSetup<C, T>;
+      setup: PluginSetup<T, E>;
     }
-  | PluginSetup<C, T>;
+  | PluginSetup<T, E>;
 
 /**
  * @public
  */
-export interface IPlugin<IConfig extends IConfiguration = IConfiguration, Options = IAnyObject> {
+export interface IPlugin<T = IPluginAPI<IConfiguration>, Options = IAnyObject> {
   // the plugin's name in the userConfig
   name: string;
   // absolute path
   id: string;
   options: Options;
-  setup: PluginSetup<IConfig, Options>;
+  setup: PluginSetup<T, Options>;
 }
 
 /**

@@ -1,5 +1,4 @@
-import type { PluginItem } from "@clownpack/core";
-import type { IAnyObject } from "@clownpack/helper";
+import type { IAnyObject, IPkg } from "@clownpack/helper";
 import type webpack from "webpack";
 import type Config from "webpack-5-chain";
 
@@ -46,7 +45,15 @@ export enum CSSMinifier {
 /**
  * @public
  */
+export type PluginItem = string | [string, IAnyObject];
+
+/**
+ * @public
+ */
 export interface IBuildOptions {
+  /**
+   * sourcemap
+   */
   devtool?: Config.DevTool;
   /**
    * 当前运行目录
@@ -56,6 +63,10 @@ export interface IBuildOptions {
    * 运行环境
    */
   env: `${Env}`;
+  /**
+   * package.json
+   */
+  pkg?: IPkg;
   /**
    * 入口
    */
@@ -67,7 +78,7 @@ export interface IBuildOptions {
   /**
    * 路径别名
    */
-  alias?: Record<string, string>;
+  alias?: Record<string, string | string[] | false>;
   /**
    * 额外依赖
    */
@@ -225,17 +236,3 @@ export interface IBuildOptions {
     close?: webpack.Watching["close"];
   }): void | Promise<void>;
 }
-
-/**
- * 配合webpack插件的插件方法
- * @public
- */
-// rome-ignore lint/suspicious/noEmptyInterface: <explanation>
-export interface IPluginAPI extends Pick<IBuildOptions, "chainWebpack" | "modifyWebpackConfig"> {}
-/**
- * 配合webpack插件的项目配置
- * @public
- */
-// rome-ignore lint/suspicious/noEmptyInterface: <explanation>
-export interface IConfiguration
-  extends Pick<IBuildOptions, "chainWebpack" | "modifyWebpackConfig"> {}

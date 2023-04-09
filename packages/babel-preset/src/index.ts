@@ -1,10 +1,7 @@
 import { IOptions } from "./types";
-import { getCorejsVersion, getDepVersion, pkgPath } from "./utils";
+import { getCorejsVersion, getDepVersion, presetPkgPath } from "./helper";
 
-export { getCorejsVersion };
-export type { IOptions };
-
-export default (_: any, opts: IOptions) => {
+export = function (_: any, opts: IOptions) {
   return {
     presets: [
       [
@@ -47,7 +44,7 @@ export default (_: any, opts: IOptions) => {
           corejs: false,
           helpers: true,
           regenerator: true,
-          absoluteRuntime: pkgPath,
+          absoluteRuntime: presetPkgPath,
           version: getDepVersion("@babel/runtime"),
           ...opts.pluginTransformRuntime,
         },

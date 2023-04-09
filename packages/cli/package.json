@@ -20,16 +20,22 @@
   },
   "dependencies": {
     "@clownpack/core": "workspace:*",
-    "@clownpack/helper": "workspace:*"
+    "@clownpack/helper": "workspace:*",
+    "v8-compile-cache": "2.3.0"
   },
   "devDependencies": {
-    "@clownpack/webpack": "workspace:*"
+    "@clownpack/bundler-webpack": "workspace:*",
+    "@clownpack/bundless": "workspace:*"
   },
   "peerDependencies": {
-    "@clownpack/webpack": "workspace:*"
+    "@clownpack/bundler-webpack": "workspace:*",
+    "@clownpack/bundless": "workspace:*"
   },
   "peerDependenciesMeta": {
-    "@clownpack/webpack": {
+    "@clownpack/bundler-webpack": {
+      "optional": true
+    },
+    "@clownpack/bundless": {
       "optional": true
     }
   },

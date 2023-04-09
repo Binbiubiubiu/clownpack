@@ -5,6 +5,14 @@ import type { IBuildOptions } from "../types";
 export { useDefinePlugin };
 
 function useDefinePlugin(config: Config, opts: IBuildOptions) {
+  const env: Record<string, any> = {
+    PUBLIC_PATH: opts.publicPath || "/",
+  };
+
+  Object.keys(env).forEach((key) => {
+    env[`process.env.${key}`] = JSON.stringify(env[key]);
+  });
+
   const define: Record<string, any> = {};
   if (opts.define) {
     for (const key in opts.define) {
@@ -14,7 +22,7 @@ function useDefinePlugin(config: Config, opts: IBuildOptions) {
 
   config.plugin("define-plugin").use(DefinePlugin, [
     {
-      PUBLIC_PATH: opts.publicPath || "/",
+      ...env,
       ...define,
     },
   ]);

@@ -1,4 +1,4 @@
-import type { IConfiguration, PluginItem } from "@clownpack/core";
+import type { IConfiguration, IPluginAPI, PluginItem } from "@clownpack/core";
 
 /**
  * @public
@@ -28,27 +28,67 @@ export enum Runner {
 /**
  * @public
  */
+export interface Output {
+  format: `${Format}`;
+  clean?: boolean;
+  dir?: string;
+  filename?: string;
+  name?: string;
+}
+
+/**
+ * @public
+ */
 export interface BaseConfiguration<T> extends IConfiguration {
   runner: T;
-  input?: string | { [key: string]: string };
-  format?: `${Format}`;
-  outDir?: string;
-  browserslist?: string | string[]; //| { [key: string]: any };
-  name?: string;
-  clean?: boolean;
-  externals?: string[];
-  extraBabelPresets?: PluginItem[];
-  extraBabelPlugins?: PluginItem[];
-  extraPostCSSPlugins?: PluginItem[];
+  input: string | { [key: string]: string };
+  output?: Output;
 }
 
 /**
  * @public
  */
 export type WebpackConfiguration = BaseConfiguration<"webpack"> &
-  import("@clownpack/webpack").IConfiguration;
+  Pick<
+    import("@clownpack/bundler-webpack").IBuildOptions,
+    | "name"
+    | "browserslist"
+    | "alias"
+    | "externals"
+    | "extraBabelPresets"
+    | "extraBabelPlugins"
+    | "extraPostCSSPlugins"
+    | "transpiler"
+    | "cssMinifier"
+    | "jsMinifier"
+    | "chainWebpack"
+    | "modifyWebpackConfig"
+  >;
 
 /**
  * @public
  */
-export type Configuration = BaseConfiguration<"tsc"> | WebpackConfiguration;
+export type BundlessConfiguration = BaseConfiguration<"bundless"> &
+  Pick<
+    import("@clownpack/bundless").IBuildOptions,
+    | "name"
+    | "targets"
+    | "alias"
+    | "extraBabelPresets"
+    | "extraBabelPlugins"
+    | "transpiler"
+    | "transpilerOptions"
+  >;
+
+/**
+ * @public
+ */
+export type Configuration = BundlessConfiguration | WebpackConfiguration;
+
+/**
+ * @public
+ */
+export interface IApi extends IPluginAPI<Configuration> {
+  modifyWebpackConfig(fn: WebpackConfiguration["modifyWebpackConfig"]): void;
+  chainWebpack(fn: WebpackConfiguration["chainWebpack"]): void;
+}

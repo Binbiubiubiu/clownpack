@@ -7,7 +7,7 @@
     }
   ],
   "commit": false,
-  "fixed": [],
+  "fixed": [["@clownpack/*"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
