@@ -8,27 +8,26 @@ on:
 
 jobs:
   lint:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Check out code
-          uses: actions/checkout@v3
-          with:
-            fetch-depth: 2
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
-        - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v2
 
-        - name: Setup Node.js environment
-          uses: actions/setup-node@v3
-          with:
-            node-version: 16
-            cache: 'pnpm'
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'pnpm'
 
-        - name: Install dependencies
-          run: pnpm install
+      - name: Install dependencies
+        run: pnpm install
 
-        - name: lint
-          run: pnpm lint
-
+      - name: lint
+        run: pnpm lint
 
   build:
     runs-on: ubuntu-latest
