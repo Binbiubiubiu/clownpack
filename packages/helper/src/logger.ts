@@ -1,4 +1,4 @@
-import debug from "debug";
+import debug from 'debug';
 
 enum Level {
   error = 1,
@@ -67,7 +67,7 @@ class DebugHandler implements ILogger {
       colors[`${namespace}:${key}`] = Level[key as LevelKey];
     }
 
-    debug.selectColor = (ns) => colors[ns] || "";
+    debug.selectColor = ns => colors[ns] || '';
 
     this.debuggers = [] as Array<debug.Debugger>;
     for (const key in Level) {

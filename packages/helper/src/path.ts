@@ -1,6 +1,6 @@
-import resolve from "resolve";
+import resolve from 'resolve';
 
-export { sync as resolveSync } from "resolve";
+export { sync as resolveSync } from 'resolve';
 
 /**
  * @public
@@ -13,7 +13,7 @@ export function getModuleDefaultExport(exports: any) {
  * @public
  */
 export function getModuleAbsPath(opts: { path: string; cwd?: string; type?: string } | string) {
-  if (typeof opts === "string") {
+  if (typeof opts === 'string') {
     opts = {
       path: opts,
     };
@@ -21,10 +21,10 @@ export function getModuleAbsPath(opts: { path: string; cwd?: string; type?: stri
   try {
     return resolve.sync(opts.path, {
       basedir: opts.cwd ?? process.cwd(),
-      extensions: [".js", ".mjs", ".cjs", ".ts", ".mts", ".cts"],
+      extensions: ['.js', '.mjs', '.cjs', '.ts', '.mts', '.cts'],
     });
   } catch (err) {
-    throw new Error(`Invalid ${opts.type ?? "module"} "${opts.path}", can not be resolved.`);
+    throw new Error(`Invalid ${opts.type ?? 'module'} "${opts.path}", can not be resolved.`);
   }
 }
 
@@ -46,5 +46,5 @@ export function slash(path: string) {
     return path;
   }
 
-  return path.replace(/\\/g, "/");
+  return path.replace(/\\/g, '/');
 }

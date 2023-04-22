@@ -1,38 +1,38 @@
-import { Logger, getPlatformInfo } from "@clownpack/helper";
-import type { IOptions } from "./types";
-import type { Platform } from "esbuild";
+import { Logger, getPlatformInfo } from '@clownpack/helper';
+import type { IOptions } from './types';
+import type { Platform } from 'esbuild';
 
 export const SUPPORTED_ESBUILD_TARGETS = [
-  "chrome",
-  "edge",
-  "firefox",
-  "ie",
-  "ios",
-  "node",
-  "opera",
-  "safari",
+  'chrome',
+  'edge',
+  'firefox',
+  'ie',
+  'ios',
+  'node',
+  'opera',
+  'safari',
 
-  "deno",
-  "hermes",
-  "rhino",
+  'deno',
+  'hermes',
+  'rhino',
 ];
 
 export function getEsbuildTargets(options: IOptions = {}) {
   const { targets, esTarget } = getPlatformInfo({
     ...options,
     replaces: {
-      ios_saf: "ios",
-      android: "chrome",
+      ios_saf: 'ios',
+      android: 'chrome',
     },
   });
 
-  let platform: Platform = "browser";
-  if ("node" in targets) {
+  let platform: Platform = 'browser';
+  if ('node' in targets) {
     if (Object.keys(targets).length > 1) {
-      delete targets["node"];
+      delete targets['node'];
       Logger.warn("esbuild target can't both in the browser and node");
     } else {
-      platform = "node";
+      platform = 'node';
     }
   }
 
@@ -44,7 +44,7 @@ export function getEsbuildTargets(options: IOptions = {}) {
   }
 
   Logger.info(`[getEsbuildTargets] platform = ${platform}`);
-  Logger.info(`[getEsbuildTargets] target = ${target.join(",")}`);
+  Logger.info(`[getEsbuildTargets] target = ${target.join(',')}`);
 
   return {
     platform,

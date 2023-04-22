@@ -1,10 +1,19 @@
 {
   "name": "@clownpack/helper",
   "version": "0.0.0",
+  "packageManager": "pnpm@8.1.0",
   "description": "A bundle build tool",
-  "keywords": [],
   "author": "Binbiubiubiu <2632003786@qq.com>",
   "license": "MIT",
+  "homepage": "https://github.com/Binbiubiubiu/clownpack#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Binbiubiubiu/clownpack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Binbiubiubiu/clownpack/issues"
+  },
+  "keywords": [],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -21,11 +30,11 @@
     "esbuild": "0.17.15",
     "esbuild-register": "3.4.2",
     "get-tsconfig": "4.5.0",
+    "glob": "^10.2.1",
     "resolve": "1.22.2",
     "tsconfig-paths": "4.2.0",
     "yargs-parser": "21.1.1"
   },
-  "packageManager": "pnpm@8.1.0",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -33,13 +42,5 @@
   "devDependencies": {
     "@types/debug": "^4.1.7",
     "@types/yargs-parser": "^21.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Binbiubiubiu/clownpack.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Binbiubiubiu/clownpack/issues"
-  },
-  "homepage": "https://github.com/Binbiubiubiu/clownpack#readme"
+  }
 }

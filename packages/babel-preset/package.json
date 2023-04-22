@@ -1,20 +1,19 @@
 {
   "name": "@clownpack/babel-preset",
   "version": "0.0.0",
+  "packageManager": "pnpm@8.1.0",
   "description": "The babel preset for clownpack.",
-  "keywords": [],
   "author": "Binbiubiubiu <2632003786@qq.com>",
   "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/*",
-        "./dist/index"
-      ]
-    }
+  "homepage": "https://github.com/Binbiubiubiu/clownpack#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Binbiubiubiu/clownpack.git"
   },
+  "bugs": {
+    "url": "https://github.com/Binbiubiubiu/clownpack/issues"
+  },
+  "keywords": [],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -26,25 +25,26 @@
     },
     "./types": "./dist/types.d.ts"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index"
+      ]
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "tsc"
   },
-  "packageManager": "pnpm@8.1.0",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Binbiubiubiu/clownpack.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Binbiubiubiu/clownpack/issues"
-  },
-  "homepage": "https://github.com/Binbiubiubiu/clownpack#readme",
   "dependencies": {
     "@babel/plugin-transform-runtime": "7.21.4",
     "@babel/preset-env": "7.21.4",
@@ -53,11 +53,7 @@
     "@babel/runtime": "^7.21.0",
     "core-js": "3.30.0"
   },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "@babel/core"
-      ]
-    }
+  "devDependencies": {
+    "@babel/core": "^7.13.0"
   }
 }

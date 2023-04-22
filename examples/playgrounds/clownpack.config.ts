@@ -1,11 +1,10 @@
-import { defineConfig } from "@clownpack/cli";
+import { defineConfig } from '@clownpack/cli';
 
 export default defineConfig({
-  runner: "bundless",
-  input: "src/index.ts",
+  runner: 'webpack',
+  input: 'src/index.ts',
   output: {
-    format: "esm",
+    format: 'esm',
   },
-  targets: [],
-  plugins: [["./custom-plugin.ts", { name: "Binbiubiubiu" }]],
+  plugins: [['./custom-plugin.ts', { name: 'Binbiubiubiu' }]],
 });

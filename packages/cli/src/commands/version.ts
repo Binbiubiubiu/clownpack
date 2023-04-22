@@ -1,9 +1,9 @@
-import { FRAMEWORK_VERSION } from "../constants";
-import { definePlugin } from "../define";
+import { FRAMEWORK_VERSION } from '../constants';
+import { definePlugin } from '../define';
 
-export default definePlugin((api) => {
+export default definePlugin(api => {
   api.registerCommand({
-    name: "version",
+    name: 'version',
     apply: () => {
       console.log();
       console.log(FRAMEWORK_VERSION);

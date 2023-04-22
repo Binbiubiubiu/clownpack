@@ -1,9 +1,9 @@
-import { defineConfig } from "@clownpack/cli";
+import { defineConfig } from '@clownpack/cli';
 
 export default defineConfig({
-  input: "",
+  input: '',
   output: {
-    format: "umd",
+    format: 'umd',
   },
-  runner: "webpack",
+  runner: 'webpack',
 });

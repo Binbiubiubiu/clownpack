@@ -1,11 +1,9 @@
 **/*.png
 **/*.svg
-package.json
-.changeset/
-.github/
 lib/
 es/
 dist/
+dist-dts/
 coverage/
 LICENSE
 yarn.lock
@@ -13,10 +11,6 @@ yarn-error.log
 pnpm-lock.yaml
 *.sh
 *.snap
-**/*.js
-**/*.jsx
-**/*.ts
-**/*.tsx
 .gitignore
 .npmignore
 .prettierignore

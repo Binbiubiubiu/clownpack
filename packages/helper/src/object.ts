@@ -1,4 +1,4 @@
-import deepmerge from "@fastify/deepmerge";
+import deepmerge from '@fastify/deepmerge';
 
 /**
  * @public

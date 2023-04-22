@@ -1,14 +1,14 @@
-import { colorette } from "@clownpack/helper";
-import type { Service } from "@clownpack/core";
-import { definePlugin } from "../define";
-import { Configuration } from "../types";
+import { colorette } from '@clownpack/helper';
+import type { Service } from '@clownpack/core';
+import { definePlugin } from '../define';
+import { Configuration } from '../types';
 
-export default definePlugin((api) => {
+export default definePlugin(api => {
   api.registerCommand({
-    name: "help",
+    name: 'help',
     apply: () => {
       const { service, args } = api;
-      const command = `${args._[0] || ""}`;
+      const command = `${args._[0] || ''}`;
 
       if (command) {
         if (command in service.commands) {
@@ -25,8 +25,8 @@ export default definePlugin((api) => {
 });
 
 const COMMON_OPTIONS = {
-  "-h, --help": "Print help information",
-  "-v, --version": "Print the version number",
+  '-h, --help': 'Print help information',
+  '-v, --version': 'Print the version number',
 };
 
 function showHelp(this: Service<Configuration>, command: string) {
@@ -40,7 +40,7 @@ function showHelp(this: Service<Configuration>, command: string) {
   console.log(`Usage: ${colorette.magentaBright(this.frameworkName)} ${cmd.name} [options]`);
 
   console.log();
-  console.log("Options:");
+  console.log('Options:');
   showMap({
     ...COMMON_OPTIONS,
     ...cmd.options,
@@ -48,7 +48,7 @@ function showHelp(this: Service<Configuration>, command: string) {
 
   if (cmd.examples) {
     console.log();
-    console.log("Examples:");
+    console.log('Examples:');
     for (const example of cmd.examples) {
       console.log(`    $ ${colorette.greenBright(example)}`);
     }
@@ -60,21 +60,21 @@ function showHelps(this: Service<Configuration>) {
   console.log(`Usage: ${colorette.magentaBright(this.frameworkName)} <COMMAND> [OPTIONS] `);
 
   console.log();
-  console.log("Options:");
+  console.log('Options:');
   showMap(COMMON_OPTIONS);
 
   if (Object.keys(this.commands).length > 0) {
     console.log();
-    console.log("Commands:");
+    console.log('Commands:');
     const map = Object.keys(this.commands).reduce((obj, name) => {
       const cmd = this.commands[name];
       if (cmd.isAlias) return obj;
       let alias = cmd.alias
-        ? typeof cmd.alias === "string"
+        ? typeof cmd.alias === 'string'
           ? cmd.alias
-          : cmd.alias.join(",")
-        : "";
-      alias = alias ? `,${alias}` : "";
+          : cmd.alias.join(',')
+        : '';
+      alias = alias ? `,${alias}` : '';
       if (cmd.description) {
         obj[`${cmd.name}${alias}`] = cmd.description;
       }
@@ -86,15 +86,15 @@ function showHelps(this: Service<Configuration>) {
   console.log();
   console.log(
     `See '${colorette.magentaBright(
-      this.frameworkName,
-    )} help <command>' for more information on a specific command.`,
+      this.frameworkName
+    )} help <command>' for more information on a specific command.`
   );
 }
 
 function blank(len: number) {
   return Array(len)
-    .map(() => "")
-    .join(" ");
+    .map(() => '')
+    .join(' ');
 }
 
 function showMap(map: Record<string, string>) {

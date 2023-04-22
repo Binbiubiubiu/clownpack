@@ -1,5 +1,5 @@
-import webpack from "webpack";
+import webpack from 'webpack';
 
 export { webpack };
-export { build } from "./build";
-export * from "./types";
+export { build } from './build';
+export * from './types';

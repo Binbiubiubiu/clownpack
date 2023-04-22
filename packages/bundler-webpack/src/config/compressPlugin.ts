@@ -1,21 +1,21 @@
-import TerserPlugin from "terser-webpack-plugin";
-import CSSMinimizerWebpackPlugin from "css-minimizer-webpack-plugin";
-import Config from "webpack-5-chain";
-import type { IAnyObject } from "@clownpack/helper";
-import { getEsbuildTargets } from "@clownpack/esbuild-preset-env/helper";
-import { Env, CSSMinifier, JSMinifier, type IBuildOptions } from "../types";
+import TerserPlugin from 'terser-webpack-plugin';
+import CSSMinimizerWebpackPlugin from 'css-minimizer-webpack-plugin';
+import Config from 'webpack-5-chain';
+import type { IAnyObject } from '@clownpack/helper';
+import { getEsbuildTargets } from '@clownpack/esbuild-preset-env/helper';
+import { Env, CSSMinifier, JSMinifier, type IBuildOptions } from '../types';
 
 function defaultMinifier(
-  v: IBuildOptions["jsMinifier"],
-  dv: `${JSMinifier}`,
+  v: IBuildOptions['jsMinifier'],
+  dv: `${JSMinifier}`
 ): false | `${JSMinifier}`;
 function defaultMinifier(
-  v: IBuildOptions["cssMinifier"],
-  dv: `${CSSMinifier}`,
+  v: IBuildOptions['cssMinifier'],
+  dv: `${CSSMinifier}`
 ): false | `${CSSMinifier}`;
 function defaultMinifier(
-  v: IBuildOptions["jsMinifier"] | IBuildOptions["cssMinifier"],
-  dv: `${JSMinifier}` | `${CSSMinifier}`,
+  v: IBuildOptions['jsMinifier'] | IBuildOptions['cssMinifier'],
+  dv: `${JSMinifier}` | `${CSSMinifier}`
 ): false | `${JSMinifier}` | `${CSSMinifier}` {
   return v === true ? dv : v ?? dv;
 }
@@ -40,7 +40,7 @@ export function useCompressPlugin(config: Config, opts: IBuildOptions) {
       terserOptions = {
         target: getEsbuildTargets({ configPath: opts.cwd }).target,
         // remove all comments
-        legalComments: "none",
+        legalComments: 'none',
       };
       break;
     case JSMinifier.terser:

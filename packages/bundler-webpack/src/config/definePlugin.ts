@@ -1,15 +1,15 @@
-import { DefinePlugin } from "webpack";
-import Config from "webpack-5-chain";
-import type { IBuildOptions } from "../types";
+import { DefinePlugin } from 'webpack';
+import Config from 'webpack-5-chain';
+import type { IBuildOptions } from '../types';
 
 export { useDefinePlugin };
 
 function useDefinePlugin(config: Config, opts: IBuildOptions) {
   const env: Record<string, any> = {
-    PUBLIC_PATH: opts.publicPath || "/",
+    PUBLIC_PATH: opts.publicPath || '/',
   };
 
-  Object.keys(env).forEach((key) => {
+  Object.keys(env).forEach(key => {
     env[`process.env.${key}`] = JSON.stringify(env[key]);
   });
 
@@ -20,7 +20,7 @@ function useDefinePlugin(config: Config, opts: IBuildOptions) {
     }
   }
 
-  config.plugin("define-plugin").use(DefinePlugin, [
+  config.plugin('define-plugin').use(DefinePlugin, [
     {
       ...env,
       ...define,

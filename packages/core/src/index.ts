@@ -1,8 +1,8 @@
-export { type IConfigOptions, type IConfigProvider, DefaultConfigProvider } from "./config";
-export { type IServiceOptions, Service } from "./service";
-export { type IPluginAPIOptions, PluginAPI } from "./pluginAPI";
+export { type IConfigOptions, type IConfigProvider, DefaultConfigProvider } from './config';
+export { type IServiceOptions, Service } from './service';
+export { type IPluginAPIOptions, PluginAPI } from './pluginAPI';
 
-export { ApplyPluginsType, ServiceStage } from "./types";
+export { ApplyPluginsType, ServiceStage } from './types';
 export type {
   Func,
   PluginItem,
@@ -16,4 +16,4 @@ export type {
   IAdd,
   IPluginAPI,
   IConfiguration,
-} from "./types";
+} from './types';

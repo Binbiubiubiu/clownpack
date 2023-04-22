@@ -1,10 +1,10 @@
-import type { IConfiguration, IPluginAPI } from "@clownpack/core";
+import type { IConfiguration, IPluginAPI } from '@clownpack/core';
 
 /**
- * webpack 插件
+ * bundless 插件
  * @public
  */
-export default function bundlerWebpackPlugin(api: IPluginAPI<IConfiguration>) {
+export default function bundlessPlugin(api: IPluginAPI<IConfiguration>) {
   // ["chainWebpack", "modifyWebpackConfig"].forEach((name) => {
   //   api.registerMethod({
   //     name,
@@ -12,5 +12,5 @@ export default function bundlerWebpackPlugin(api: IPluginAPI<IConfiguration>) {
   // });
 }
 
-export { build } from "./build";
-export * from "./types";
+export { build } from './build';
+export * from './types';

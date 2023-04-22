@@ -1,6 +1,6 @@
-import type { IAnyObject } from "@clownpack/helper";
-import type { PluginDefineOptions } from "@clownpack/core";
-import type { Configuration, IApi } from "./types";
+import type { IAnyObject } from '@clownpack/helper';
+import type { PluginDefineOptions } from '@clownpack/core';
+import type { Configuration, IApi } from './types';
 
 /**
  * @public

@@ -1,7 +1,7 @@
-import { transform } from "@babel/core";
-import { getAliasFromTsconfig } from "@clownpack/helper";
-import type { IBuildOptions } from "../types";
-import { DFEAULT_RESOLVE_EXTENSIONS } from "../constants";
+import { transform } from '@babel/core';
+import { getAliasFromTsconfig } from '@clownpack/helper';
+import type { IBuildOptions } from '../types';
+import { DFEAULT_RESOLVE_EXTENSIONS } from '../constants';
 
 export default function babelTransformer(this: IBuildOptions, content: string) {
   const presetOptions = {
@@ -11,16 +11,16 @@ export default function babelTransformer(this: IBuildOptions, content: string) {
     pluginTransformRuntime: {},
   };
   // use @babel/runtime in workspace
-  if (this.pkg?.dependencies?.["@babel/runtime"]) {
+  if (this.pkg?.dependencies?.['@babel/runtime']) {
     presetOptions.pluginTransformRuntime = {
       absoluteRuntime: false,
-      version: this.pkg.dependencies?.["@babel/runtime"],
+      version: this.pkg.dependencies?.['@babel/runtime'],
     };
   }
 
   const ret = transform(content, {
     cwd: this.cwd,
-    sourceType: "unambiguous",
+    sourceType: 'unambiguous',
     configFile: false,
     babelrc: false,
     browserslistConfigFile: false,
@@ -33,13 +33,13 @@ export default function babelTransformer(this: IBuildOptions, content: string) {
     //   privateFieldsAsProperties: true,
     // },
     presets: [
-      [require.resolve("@clownpack/babel-preset"), presetOptions],
+      [require.resolve('@clownpack/babel-preset'), presetOptions],
       ...(this.extraBabelPresets || []),
     ],
     plugins: [
-      [require.resolve("babel-plugin-transform-define"), this.define ?? {}],
+      [require.resolve('babel-plugin-transform-define'), this.define ?? {}],
       [
-        require.resolve("babel-plugin-module-resolver"),
+        require.resolve('babel-plugin-module-resolver'),
         {
           cwd: this.cwd,
           extensions: this.cwd ?? DFEAULT_RESOLVE_EXTENSIONS,
@@ -52,7 +52,7 @@ export default function babelTransformer(this: IBuildOptions, content: string) {
   });
 
   return {
-    code: ret?.code || "",
+    code: ret?.code || '',
     map: ret?.map,
   };
 }

@@ -1,25 +1,25 @@
-import { getAliasFromTsconfig, importLazy } from "@clownpack/helper";
-import { ApplyPluginsType, type IPluginAPI } from "@clownpack/core";
-import type { webpack } from "@clownpack/bundler-webpack";
-import { Env, Format, type WebpackConfiguration } from "../types";
+import { getAliasFromTsconfig, importLazy } from '@clownpack/helper';
+import { ApplyPluginsType, type IPluginAPI } from '@clownpack/core';
+import type { webpack } from '@clownpack/bundler-webpack';
+import { Env, Format, type WebpackConfiguration } from '../types';
 
 const SUPPOTR_FORMAT = {
-  umd: "umd",
-  cjs: "commonjs-static",
-  esm: "module",
+  umd: 'umd',
+  cjs: 'commonjs-static',
+  esm: 'module',
 };
 
 export async function build(
-  api: IPluginAPI<WebpackConfiguration>,
+  api: IPluginAPI<WebpackConfiguration>
 ): Promise<webpack.Stats | undefined> {
   const { input, output, alias, ...userConfig } = api.config;
   const { format = Format.esm } = output || {};
 
-  const bundler = await importLazy<typeof import("@clownpack/bundler-webpack")>(
-    "@clownpack/bundler-webpack",
+  const bundler = await importLazy<typeof import('@clownpack/bundler-webpack')>(
+    '@clownpack/bundler-webpack',
     {
       cwd: api.cwd,
-    },
+    }
   );
 
   if (!(format in SUPPOTR_FORMAT)) {
@@ -29,13 +29,12 @@ export async function build(
     throw new Error(`module ${format} need output.name`);
   }
 
-  const entry = typeof input === "string" ? { main: input } : input;
   return bundler.build({
     name: api.pkg.name,
     cwd: api.cwd,
     env: api.env as `${Env}`,
     pkg: api.pkg,
-    entry,
+    input: typeof input === 'string' ? { main: input } : input,
     alias: { ...getAliasFromTsconfig(api.cwd), ...alias },
     clean: output?.clean,
     esModule: format === Format.esm,
@@ -50,7 +49,7 @@ export async function build(
       await userConfig.chainWebpack?.(config, args);
 
       await api.applyPlugins({
-        name: "chainWebpack",
+        name: 'chainWebpack',
         type: ApplyPluginsType.modify,
         initialValue: config,
         args,
@@ -62,7 +61,7 @@ export async function build(
       }
 
       const modifiedConfig = await api.applyPlugins({
-        name: "modifyWebpackConfig",
+        name: 'modifyWebpackConfig',
         initialValue: config,
         args,
       });

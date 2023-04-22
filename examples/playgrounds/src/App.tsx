@@ -1,5 +1,5 @@
-import { Component, Vue } from "vue-property-decorator";
-import HelloWorld from "./components/HelloWorld";
+import { Component, Vue } from 'vue-property-decorator';
+import HelloWorld from './components/HelloWorld';
 
 @Component({
   components: {

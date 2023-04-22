@@ -1,19 +1,19 @@
-import Config from "webpack-5-chain";
-import type { IBuildOptions } from "../types";
-import path from "path";
+import Config from 'webpack-5-chain';
+import type { IBuildOptions } from '../types';
+import path from 'path';
 
 export { useCss };
 
 function useCss(config: Config, opts: IBuildOptions) {
   const sourceMap = !!opts.devtool;
   const rulesConfig = [
-    { name: "css", test: /\.css(\?.*)?$/ },
+    { name: 'css', test: /\.css(\?.*)?$/ },
     {
-      name: "less",
+      name: 'less',
       test: /\.less(\?.*)?$/,
-      loader: require.resolve("less-loader"),
+      loader: require.resolve('less-loader'),
       loaderOptions: {
-        implementation: require("less"),
+        implementation: require('less'),
         lessOptions: {
           javascriptEnabled: true,
         },
@@ -21,18 +21,18 @@ function useCss(config: Config, opts: IBuildOptions) {
       },
     },
     {
-      name: "sass",
+      name: 'sass',
       test: /\.(sass|scss)(\?.*)?$/,
-      implementation: require("sass"),
-      loader: require.resolve("sass-loader"),
+      implementation: require('sass'),
+      loader: require.resolve('sass-loader'),
       loaderOptions: opts.sassLoader || {},
     },
     {
-      name: "stylus",
+      name: 'stylus',
       test: /\.styl(us)?(\?.*)?$/,
-      loader: require.resolve("stylus-loader"),
+      loader: require.resolve('stylus-loader'),
       loaderOptions: {
-        implementation: require("stylus"),
+        implementation: require('stylus'),
         ...opts.stylusLoader,
       },
     },
@@ -42,14 +42,14 @@ function useCss(config: Config, opts: IBuildOptions) {
     const rule = config.module.rule(name).test(test);
     const nestRulesConfig = [
       {
-        rule: rule.oneOf("force-css-modules").resourceQuery(/modules/),
+        rule: rule.oneOf('force-css-modules').resourceQuery(/modules/),
         forceCssModule: true,
       },
       {
-        rule: rule.oneOf("normal-modules").test(/\.module\.\w+$/),
+        rule: rule.oneOf('normal-modules').test(/\.module\.\w+$/),
       },
       {
-        rule: rule.oneOf("normal").sideEffects(true),
+        rule: rule.oneOf('normal').sideEffects(true),
       },
     ].filter(Boolean);
 
@@ -59,25 +59,25 @@ function useCss(config: Config, opts: IBuildOptions) {
           opts.cssExtract = {};
         }
         rule
-          .use("mini-css-extract-plugin")
-          .loader(require("mini-css-extract-plugin").loader)
+          .use('mini-css-extract-plugin')
+          .loader(require('mini-css-extract-plugin').loader)
           .options({
             publicPath:
-              opts.publicPath && path.isAbsolute(opts.publicPath) ? opts.publicPath : "./",
+              opts.publicPath && path.isAbsolute(opts.publicPath) ? opts.publicPath : './',
             emit: true,
             esModule: true,
             ...opts.cssExtract,
           });
       } else {
         rule
-          .use("style-loader")
-          .loader(require.resolve("style-loader"))
+          .use('style-loader')
+          .loader(require.resolve('style-loader'))
           .options({ base: 0, esModule: true, ...opts.styleLoader });
       }
 
       rule
-        .use("css-loader")
-        .loader(require.resolve("css-loader"))
+        .use('css-loader')
+        .loader(require.resolve('css-loader'))
         .options({
           sourceMap,
           importLoaders: 1,
@@ -86,13 +86,13 @@ function useCss(config: Config, opts: IBuildOptions) {
             filter: (url: string) => {
               // Don't parse absolute URLs
               // ref: https://github.com/webpack-contrib/css-loader#url
-              if (url.startsWith("/")) return false;
+              if (url.startsWith('/')) return false;
               return true;
             },
           },
           import: true,
           modules: {
-            localIdentName: "[name]_[local]_[hash:base64:5]",
+            localIdentName: '[name]_[local]_[hash:base64:5]',
             auto: forceCssModule ? undefined : true,
             ...opts.cssLoaderModules,
           },
@@ -101,17 +101,17 @@ function useCss(config: Config, opts: IBuildOptions) {
         });
 
       rule
-        .use("postcss-loader")
-        .loader(require.resolve("postcss-loader"))
+        .use('postcss-loader')
+        .loader(require.resolve('postcss-loader'))
         .options({
           sourceMap,
           postcssOptions: {
-            ident: "postcss",
+            ident: 'postcss',
             plugins: [
-              require("postcss-flexbugs-fixes"),
-              require("postcss-preset-env")({
+              require('postcss-flexbugs-fixes'),
+              require('postcss-preset-env')({
                 autoprefixer: {
-                  flexbox: "no-2009",
+                  flexbox: 'no-2009',
                   ...opts.autoprefixer,
                 },
                 stage: 3,

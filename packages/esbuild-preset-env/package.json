@@ -1,20 +1,19 @@
 {
   "name": "@clownpack/esbuild-preset-env",
   "version": "0.0.0",
+  "packageManager": "pnpm@8.1.0",
   "description": "a esbuild plugin",
-  "keywords": [],
   "author": "Binbiubiubiu <2632003786@qq.com>",
   "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/*",
-        "./dist/index"
-      ]
-    }
+  "homepage": "https://github.com/Binbiubiubiu/clownpack#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Binbiubiubiu/clownpack.git"
   },
+  "bugs": {
+    "url": "https://github.com/Binbiubiubiu/clownpack/issues"
+  },
+  "keywords": [],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -27,25 +26,26 @@
     "./types": "./dist/types.d.ts",
     "./*": "./dist/*"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index"
+      ]
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "tsc"
   },
-  "packageManager": "pnpm@8.1.0",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Binbiubiubiu/clownpack.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Binbiubiubiu/clownpack/issues"
-  },
-  "homepage": "https://github.com/Binbiubiubiu/clownpack#readme",
   "dependencies": {
     "@clownpack/helper": "workspace:*"
   },

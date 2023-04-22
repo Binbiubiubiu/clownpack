@@ -1,8 +1,8 @@
-import { join } from "path";
-import { existsSync } from "fs";
-import { DEFAULT_CONFIG_EXTENSIONS, DEFAULT_FRAMEWORK_NAME, DEFAULT_NODE_ENV } from "./constants";
-import { merge, getModuleDefaultExport, useEsbuildRegisterEffect } from "@clownpack/helper";
-import { localEnvSuffix } from "./utils";
+import { join } from 'path';
+import { existsSync } from 'fs';
+import { DEFAULT_CONFIG_EXTENSIONS, DEFAULT_FRAMEWORK_NAME, DEFAULT_NODE_ENV } from './constants';
+import { merge, getModuleDefaultExport, useEsbuildRegisterEffect } from '@clownpack/helper';
+import { localEnvSuffix } from './utils';
 
 /**
  * @public
@@ -59,10 +59,10 @@ export class DefaultConfigProvider<T> implements IConfigProvider<T> {
   getConfigFiles(): string[] {
     const { env, cwd, name, customEnv, exts, defaultConfigFiles: dfs } = this.options;
     const resolveDefaultConfigFile =
-      typeof dfs === "function" ? dfs : (ext: string) => `${name}.config${ext}`;
+      typeof dfs === 'function' ? dfs : (ext: string) => `${name}.config${ext}`;
     const defaultConfigFiles = Array.isArray(dfs)
       ? dfs
-      : exts.map((ext) => resolveDefaultConfigFile(ext));
+      : exts.map(ext => resolveDefaultConfigFile(ext));
     for (const configFile of defaultConfigFiles) {
       const absConfigPath = join(cwd, configFile);
       if (existsSync(absConfigPath)) {
@@ -74,7 +74,7 @@ export class DefaultConfigProvider<T> implements IConfigProvider<T> {
     const addExt = (ext: string) => {
       const file = this.baseConfigFile;
       if (file) {
-        const i = file.lastIndexOf(".");
+        const i = file.lastIndexOf('.');
         return file.slice(0, i) + ext + file.slice(i);
       }
       return null;
@@ -85,8 +85,8 @@ export class DefaultConfigProvider<T> implements IConfigProvider<T> {
       configFiles.push(
         this.baseConfigFile,
         ...localEnvSuffix({ env, customEnv })
-          .map((ext) => addExt(ext) || "")
-          .filter(existsSync),
+          .map(ext => addExt(ext) || '')
+          .filter(existsSync)
       );
     }
     return configFiles;

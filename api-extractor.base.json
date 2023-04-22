@@ -27,7 +27,7 @@
     // "untrimmedFilePath": "<projectFolder>/dist/<unscopedPackageName>-private.d.ts",
     // "betaTrimmedFilePath": "<projectFolder>/dist/<unscopedPackageName>-beta.d.ts",
     // "alphaTrimmedFilePath": "<projectFolder>/dist/<unscopedPackageName>-alpha.d.ts"
-    //"omitTrimmingComments": true
+    // "omitTrimmingComments": true
   },
   "tsdocMetadata": {
     "enabled": false

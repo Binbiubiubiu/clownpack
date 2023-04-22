@@ -17,5 +17,5 @@ new Promise(() => {});
 export const age = 3;
 
 export default {
-  name: "Binbiubiubiu",
+  name: 'Binbiubiubiu',
 };

@@ -1,10 +1,19 @@
 {
   "name": "@clownpack/cli",
   "version": "0.0.0",
+  "packageManager": "pnpm@8.1.0",
   "description": "A bundle build tool",
-  "keywords": [],
   "author": "Binbiubiubiu <2632003786@qq.com>",
   "license": "MIT",
+  "homepage": "https://github.com/Binbiubiubiu/clownpack#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Binbiubiubiu/clownpack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Binbiubiubiu/clownpack/issues"
+  },
+  "keywords": [],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -14,18 +23,13 @@
     "dist",
     "bin"
   ],
+  "engines": {
+    "node": ">=14",
+    "pnpm": ">=7"
+  },
   "scripts": {
     "build": "tsc && api-extractor run --typescript-compiler-folder=../../node_modules/typescript",
     "play": "pnpm build && pnpm --filter=playground run clownpack "
-  },
-  "dependencies": {
-    "@clownpack/core": "workspace:*",
-    "@clownpack/helper": "workspace:*",
-    "v8-compile-cache": "2.3.0"
-  },
-  "devDependencies": {
-    "@clownpack/bundler-webpack": "workspace:*",
-    "@clownpack/bundless": "workspace:*"
   },
   "peerDependencies": {
     "@clownpack/bundler-webpack": "workspace:*",
@@ -39,21 +43,17 @@
       "optional": true
     }
   },
-  "packageManager": "pnpm@8.1.0",
-  "engines": {
-    "node": ">=14",
-    "pnpm": ">=7"
+  "dependencies": {
+    "@clownpack/core": "workspace:*",
+    "@clownpack/helper": "workspace:*",
+    "v8-compile-cache": "2.3.0"
+  },
+  "devDependencies": {
+    "@clownpack/bundler-webpack": "workspace:*",
+    "@clownpack/bundless": "workspace:*"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Binbiubiubiu/clownpack.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Binbiubiubiu/clownpack/issues"
-  },
-  "homepage": "https://github.com/Binbiubiubiu/clownpack#readme"
+  }
 }

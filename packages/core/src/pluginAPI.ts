@@ -1,6 +1,6 @@
-import assert from "assert";
-import zod from "zod";
-import path from "path";
+import assert from 'assert';
+import zod from 'zod';
+import path from 'path';
 
 import {
   useEsbuildRegisterEffect,
@@ -8,9 +8,9 @@ import {
   getModuleDefaultExport,
   colorette,
   resolveSync,
-} from "@clownpack/helper";
+} from '@clownpack/helper';
 
-import { fromZodError } from "zod-validation-error";
+import { fromZodError } from 'zod-validation-error';
 
 import {
   ServiceStage,
@@ -21,8 +21,8 @@ import {
   type Func,
   type IPluginAPI,
   type IConfiguration,
-} from "./types";
-import { Service } from "./service";
+} from './types';
+import { Service } from './service';
 
 /**
  * @public
@@ -44,14 +44,14 @@ export class PluginAPI {
     this.plugin = options.plugin;
   }
 
-  register(hook: Omit<IHook, "plugin">) {
+  register(hook: Omit<IHook, 'plugin'>) {
     assert(
-      typeof hook.name === "string",
-      `Failed to register the hook ${hook.name} in the plugin ${this.plugin.name}. The name of the hook must be a string`,
+      typeof hook.name === 'string',
+      `Failed to register the hook ${hook.name} in the plugin ${this.plugin.name}. The name of the hook must be a string`
     );
     assert(
-      typeof hook.apply === "function",
-      `Failed to register the hook ${hook.name} in the plugin ${this.plugin.name}. The apply of the hook must be a function`,
+      typeof hook.apply === 'function',
+      `Failed to register the hook ${hook.name} in the plugin ${this.plugin.name}. The apply of the hook must be a function`
     );
     this.service.hooks[hook.name] ||= [];
     this.service.hooks[hook.name].push({
@@ -60,12 +60,12 @@ export class PluginAPI {
     });
   }
 
-  registerCommand(cmd: Omit<ICommand, "pluginId">) {
+  registerCommand(cmd: Omit<ICommand, 'pluginId'>) {
     assert(
       !this.service.commands[cmd.name],
-      `${colorette.redBright("registerCommand")} failed, the command ${cmd.name} is exists from ${
+      `${colorette.redBright('registerCommand')} failed, the command ${cmd.name} is exists from ${
         this.plugin.name
-      }`,
+      }`
     );
     let { alias } = cmd;
     this.service.commands[cmd.name] = {
@@ -74,10 +74,10 @@ export class PluginAPI {
     };
     delete cmd.alias;
     if (alias) {
-      if (typeof alias === "string") {
+      if (typeof alias === 'string') {
         alias = [alias];
       }
-      alias.forEach((name) => {
+      alias.forEach(name => {
         this.registerCommand({
           ...cmd,
           isAlias: true,
@@ -91,8 +91,8 @@ export class PluginAPI {
     assert(
       this.service.stage === ServiceStage.initPlugins,
       `${colorette.redBright(
-        "registerPlugins",
-      )} failed, it should only be used in registering stage.`,
+        'registerPlugins'
+      )} failed, it should only be used in registering stage.`
     );
     const plugins = PluginAPI.resolvePlugins({
       cwd: this.service.cwd,
@@ -103,12 +103,12 @@ export class PluginAPI {
 
   registerMethod(opts: { name: string; fn?: Func }) {
     assert(
-      typeof opts.name === "string",
-      `${colorette.redBright("registerMethod")} failed, name must be string`,
+      typeof opts.name === 'string',
+      `${colorette.redBright('registerMethod')} failed, name must be string`
     );
     assert(
       opts.name.length > 0,
-      `${colorette.redBright("registerMethod")} failed, name must not be empty`,
+      `${colorette.redBright('registerMethod')} failed, name must not be empty`
     );
     this.service.methods[opts.name] ||= [];
     this.service.methods[opts.name].push(
@@ -118,7 +118,7 @@ export class PluginAPI {
             name: opts.name,
             apply,
           });
-        },
+        }
     );
   }
 
@@ -151,7 +151,7 @@ export class PluginAPI {
         if (methods) {
           if (Array.isArray(methods)) {
             return (...args: any[]) => {
-              methods.forEach((cb) => {
+              methods.forEach(cb => {
                 cb.apply(target, args);
               });
             };
@@ -161,7 +161,7 @@ export class PluginAPI {
 
         if (opts.serviceProps.includes(key) && key in opts.service) {
           const fn = Reflect.get(opts.service, key, opts.service);
-          return typeof fn === "function" ? fn.bind(opts.service) : fn;
+          return typeof fn === 'function' ? fn.bind(opts.service) : fn;
         }
 
         if (opts.extraProps[key]) {
@@ -177,7 +177,7 @@ export class PluginAPI {
     const map: Record<string, any> = {};
     if (Array.isArray(items)) {
       for (const item of items) {
-        if (typeof item === "string") {
+        if (typeof item === 'string') {
           const path = item;
           map[path] = null;
         } else if (Array.isArray(item)) {
@@ -189,15 +189,12 @@ export class PluginAPI {
     return map;
   }
 
-  static resolvePlugins<T>(opts: {
-    cwd: string;
-    plugins?: PluginItem[];
-  }): IPlugin<T>[] {
+  static resolvePlugins<T>(opts: { cwd: string; plugins?: PluginItem[] }): IPlugin<T>[] {
     const map = PluginAPI.getPresetOrPluginMap(opts.plugins || []);
-    return Object.keys(map).map((path) => {
+    return Object.keys(map).map(path => {
       const id = getModuleAbsPath({
         path,
-        type: "plugin",
+        type: 'plugin',
         cwd: opts.cwd,
       });
       const plugin: IPlugin<T> = {
@@ -209,13 +206,13 @@ export class PluginAPI {
       useEsbuildRegisterEffect(() => {
         try {
           const mod = getModuleDefaultExport(require(id));
-          if (typeof mod.name === "string" && mod.name) {
+          if (typeof mod.name === 'string' && mod.name) {
             plugin.name = mod.name;
           }
 
-          if (typeof mod === "function") {
+          if (typeof mod === 'function') {
             plugin.setup = mod;
-          } else if (typeof mod.setup === "function") {
+          } else if (typeof mod.setup === 'function') {
             plugin.setup = mod.setup;
           }
         } catch (e: any) {
@@ -231,14 +228,14 @@ export class PluginAPI {
     if (schema) {
       assert(
         isZodSchema(schema),
-        `The schema configuration of the plugin ${colorette.redBright(plugin.name)} is incorrect.`,
+        `The schema configuration of the plugin ${colorette.redBright(plugin.name)} is incorrect.`
       );
       const output = schema.safeParse(plugin.options);
       if (!output.success) {
         console.log(
           `Incorrect options for the plugin ${colorette.redBright(plugin.name)}.\n${fromZodError(
-            output.error,
-          )}`,
+            output.error
+          )}`
         );
         process.exit(1);
       }
@@ -248,7 +245,7 @@ export class PluginAPI {
 
 const isZodSchema = async (schema: any) => {
   try {
-    return "safeParse" in schema;
+    return 'safeParse' in schema;
   } catch (_) {
     return false;
   }

@@ -1,65 +1,65 @@
-import Config from "webpack-5-chain";
-import type { IBuildOptions } from "../types";
+import Config from 'webpack-5-chain';
+import type { IBuildOptions } from '../types';
 
 export { useAssets };
 
 function useAssets(config: Config, opts: IBuildOptions) {
   const genAssetSubPath = (dir: string) =>
-    `static/${dir}/[name]${opts.hash ? ".[hash:8]" : ""}[ext]`;
+    `static/${dir}/[name]${opts.hash ? '.[hash:8]' : ''}[ext]`;
 
-  const rule = config.module.rule("asset");
+  const rule = config.module.rule('asset');
   const inlineLimit = opts.inlineLimit || 10000;
 
   rule
-    .oneOf("images")
+    .oneOf('images')
     .test(/\.(png|jpe?g|gif|webp|avif)(\?.*)?$/)
-    .type("asset")
+    .type('asset')
     .parser({
       dataUrlCondition: {
         maxSize: inlineLimit,
       },
     })
     .generator({
-      filename: genAssetSubPath("img"),
+      filename: genAssetSubPath('img'),
     });
 
   rule
-    .oneOf("media")
+    .oneOf('media')
     .test(/\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/)
-    .type("asset")
+    .type('asset')
     .parser({
       dataUrlCondition: {
         maxSize: inlineLimit,
       },
     })
     .generator({
-      filename: genAssetSubPath("media"),
+      filename: genAssetSubPath('media'),
     });
 
   rule
-    .oneOf("fonts")
+    .oneOf('fonts')
     .test(/\.(woff2?|eot|ttf|otf)(\?.*)?$/i)
-    .type("asset")
+    .type('asset')
     .parser({
       dataUrlCondition: {
         maxSize: inlineLimit,
       },
     })
     .generator({
-      filename: genAssetSubPath("fonts"),
+      filename: genAssetSubPath('fonts'),
     });
 
   config.module
-    .rule("svg")
+    .rule('svg')
     .test(/\.(svg)(\?.*)?$/)
-    .type("asset/resource")
-    .use("svgo-loader")
-    .loader(require.resolve("svgo-loader"))
+    .type('asset/resource')
+    .use('svgo-loader')
+    .loader(require.resolve('svgo-loader'))
     .options({
       configFile: false,
       plugins: [
         {
-          name: "preset-default",
+          name: 'preset-default',
           params: {
             overrides: {
               // viewBox is required to resize SVGs with CSS.
@@ -73,6 +73,6 @@ function useAssets(config: Config, opts: IBuildOptions) {
     })
     .end()
     .generator({
-      filename: genAssetSubPath("img"),
+      filename: genAssetSubPath('img'),
     });
 }

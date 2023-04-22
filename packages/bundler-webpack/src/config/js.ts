@@ -1,6 +1,6 @@
-import Config from "webpack-5-chain";
-import { getEsbuildTargets } from "@clownpack/esbuild-preset-env/helper";
-import { IBuildOptions, Transpiler } from "../types";
+import Config from 'webpack-5-chain';
+import { getEsbuildTargets } from '@clownpack/esbuild-preset-env/helper';
+import { IBuildOptions, Transpiler } from '../types';
 
 export { useJs };
 
@@ -9,13 +9,13 @@ function useJs(config: Config, opts: IBuildOptions) {
 
   const srcRules = [
     config.module
-      .rule("src")
+      .rule('src')
       .test(/\.(js|mjs|cjs)$/)
       .include.add(opts.cwd)
       .end()
       .exclude.add(/node_modules/)
       .end(),
-    config.module.rule("jsx").test(/\.(jsx|ts|tsx|mts|cts)$/),
+    config.module.rule('jsx').test(/\.(jsx|ts|tsx|mts|cts)$/),
   ];
 
   for (const rule of srcRules) {
@@ -28,17 +28,17 @@ function useJs(config: Config, opts: IBuildOptions) {
         pluginTransformRuntime: {},
       };
       // use @babel/runtime in workspace
-      if (opts.pkg?.dependencies?.["@babel/runtime"]) {
+      if (opts.pkg?.dependencies?.['@babel/runtime']) {
         presetOptions.pluginTransformRuntime = {
           absoluteRuntime: false,
-          version: opts.pkg.dependencies?.["@babel/runtime"],
+          version: opts.pkg.dependencies?.['@babel/runtime'],
         };
       }
       rule
-        .use("babel-loader")
-        .loader(require.resolve("babel-loader"))
+        .use('babel-loader')
+        .loader(require.resolve('babel-loader'))
         .options({
-          sourceType: "unambiguous",
+          sourceType: 'unambiguous',
           configFile: false,
           babelrc: false,
           cacheDirectory: false,
@@ -51,7 +51,7 @@ function useJs(config: Config, opts: IBuildOptions) {
           //   privateFieldsAsProperties: true,
           // },
           presets: [
-            [require.resolve("@clownpack/babel-preset"), presetOptions],
+            [require.resolve('@clownpack/babel-preset'), presetOptions],
             ...(opts.extraBabelPresets || []),
           ],
           plugins: opts.extraBabelPlugins || [],
@@ -59,17 +59,17 @@ function useJs(config: Config, opts: IBuildOptions) {
         });
     } else if (opts.transpiler === Transpiler.swc) {
       rule
-        .use("swc-loader")
-        .loader(require.resolve("@swc-node/loader"))
+        .use('swc-loader')
+        .loader(require.resolve('@swc-node/loader'))
         .options({
           ...opts.transpilerOptions,
         });
     } else if (opts.transpiler === Transpiler.esbuild) {
       rule
-        .use("esbuild-loader")
-        .loader(require.resolve("esbuild-loader"))
+        .use('esbuild-loader')
+        .loader(require.resolve('esbuild-loader'))
         .options({
-          implementation: require("esbuild"),
+          implementation: require('esbuild'),
           target: getEsbuildTargets({ configPath: opts.cwd }).target,
           ...opts.transpilerOptions,
         });

@@ -1,9 +1,9 @@
-import type { Pattern } from "copy-webpack-plugin";
-import Config from "webpack-5-chain";
-import fs from "fs";
-import path from "path";
-import type { IBuildOptions } from "../types";
-import { DEFAULT_PUBLIC_PATH } from "../constants";
+import type { Pattern } from 'copy-webpack-plugin';
+import Config from 'webpack-5-chain';
+import fs from 'fs';
+import path from 'path';
+import type { IBuildOptions } from '../types';
+import { DEFAULT_PUBLIC_PATH } from '../constants';
 
 export { useCopyPlugin };
 
@@ -25,7 +25,7 @@ function useCopyPlugin(config: Config, opts: IBuildOptions) {
   if (opts.copy) {
     for (const item of opts.copy) {
       let pattern: Pattern;
-      if (typeof item === "string") {
+      if (typeof item === 'string') {
         pattern = { from: item, info: { minimized: true } };
       } else {
         pattern = {
@@ -38,7 +38,7 @@ function useCopyPlugin(config: Config, opts: IBuildOptions) {
   }
 
   if (copyPatterns.length) {
-    config.plugin("copy-webpack-plugin").use(require("copy-webpack-plugin"), [
+    config.plugin('copy-webpack-plugin').use(require('copy-webpack-plugin'), [
       {
         patterns: copyPatterns,
       },

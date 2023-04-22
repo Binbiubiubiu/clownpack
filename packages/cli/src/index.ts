@@ -1,2 +1,2 @@
-export { defineConfig, definePlugin } from "./define";
-export * from "./types";
+export { defineConfig, definePlugin } from './define';
+export * from './types';

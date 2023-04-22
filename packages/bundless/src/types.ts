@@ -1,20 +1,20 @@
-import type { IAnyObject, IPkg } from "@clownpack/helper";
+import type { IAnyObject, IPkg } from '@clownpack/helper';
 
 /**
  * 打包环境变量
  * @public
  */
 export enum Env {
-  development = "development",
-  production = "production",
+  development = 'development',
+  production = 'production',
 }
 
 /**
  * @public
  */
 export enum Format {
-  cjs = "cjs",
-  esm = "esm",
+  cjs = 'cjs',
+  esm = 'esm',
 }
 
 /**
@@ -22,9 +22,9 @@ export enum Format {
  * @public
  */
 export enum Transpiler {
-  babel = "babel",
-  swc = "swc",
-  esbuild = "esbuild",
+  babel = 'babel',
+  swc = 'swc',
+  esbuild = 'esbuild',
 }
 
 /**
@@ -52,6 +52,10 @@ export interface IBuildOptions {
    * package.json
    */
   pkg: IPkg;
+  /**
+   * 入口
+   */
+  input: string;
   /**
    * 路径别名
    */

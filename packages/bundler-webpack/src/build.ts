@@ -1,6 +1,6 @@
-import webpack from "webpack";
-import { getConfig } from "./config";
-import type { IBuildOptions } from "./types";
+import webpack from 'webpack';
+import { getConfig } from './config';
+import type { IBuildOptions } from './types';
 
 /**
  * webpack 打包命令
@@ -10,7 +10,7 @@ export async function build(opts: IBuildOptions) {
   const webpackConfig = await getConfig(opts);
 
   const compiler = webpack(webpackConfig);
-  let closeWatching: webpack.Watching["close"];
+  let closeWatching: webpack.Watching['close'];
 
   type Callback = Parameters<typeof compiler.run>[0];
   type Result = Parameters<Callback>[1];
@@ -19,7 +19,7 @@ export async function build(opts: IBuildOptions) {
   return new Promise<Result>((resolve, reject) => {
     const handler: Callback = async (err, stats) => {
       const validErr =
-        err || (stats?.hasErrors() ? new Error(stats.toString("errors-only")) : null);
+        err || (stats?.hasErrors() ? new Error(stats.toString('errors-only')) : null);
 
       await opts.onBuildComplete?.({
         err: validErr,
@@ -43,7 +43,7 @@ export async function build(opts: IBuildOptions) {
 
     if (opts.watch) {
       const watchOptions =
-        typeof opts.watch === "object" ? opts.watch : webpackConfig.watchOptions ?? {};
+        typeof opts.watch === 'object' ? opts.watch : webpackConfig.watchOptions ?? {};
       compiler.watch(watchOptions, handler);
     } else {
       compiler.run(handler);

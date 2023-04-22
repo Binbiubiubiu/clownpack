@@ -1,28 +1,28 @@
-import type { IConfiguration, IPluginAPI, PluginItem } from "@clownpack/core";
+import type { IConfiguration, IPluginAPI, PluginItem } from '@clownpack/core';
 
 /**
  * @public
  */
 export enum Env {
-  development = "development",
-  production = "production",
+  development = 'development',
+  production = 'production',
 }
 
 /**
  * @public
  */
 export enum Format {
-  cjs = "cjs",
-  esm = "esm",
-  umd = "umd",
+  cjs = 'cjs',
+  esm = 'esm',
+  umd = 'umd',
 }
 
 /**
  * @public
  */
 export enum Runner {
-  webpack = "webpack",
-  tsc = "tsc",
+  webpack = 'webpack',
+  tsc = 'tsc',
 }
 
 /**
@@ -48,36 +48,36 @@ export interface BaseConfiguration<T> extends IConfiguration {
 /**
  * @public
  */
-export type WebpackConfiguration = BaseConfiguration<"webpack"> &
+export type WebpackConfiguration = BaseConfiguration<'webpack'> &
   Pick<
-    import("@clownpack/bundler-webpack").IBuildOptions,
-    | "name"
-    | "browserslist"
-    | "alias"
-    | "externals"
-    | "extraBabelPresets"
-    | "extraBabelPlugins"
-    | "extraPostCSSPlugins"
-    | "transpiler"
-    | "cssMinifier"
-    | "jsMinifier"
-    | "chainWebpack"
-    | "modifyWebpackConfig"
+    import('@clownpack/bundler-webpack').IBuildOptions,
+    | 'name'
+    | 'browserslist'
+    | 'alias'
+    | 'externals'
+    | 'extraBabelPresets'
+    | 'extraBabelPlugins'
+    | 'extraPostCSSPlugins'
+    | 'transpiler'
+    | 'cssMinifier'
+    | 'jsMinifier'
+    | 'chainWebpack'
+    | 'modifyWebpackConfig'
   >;
 
 /**
  * @public
  */
-export type BundlessConfiguration = BaseConfiguration<"bundless"> &
+export type BundlessConfiguration = BaseConfiguration<'bundless'> &
   Pick<
-    import("@clownpack/bundless").IBuildOptions,
-    | "name"
-    | "targets"
-    | "alias"
-    | "extraBabelPresets"
-    | "extraBabelPlugins"
-    | "transpiler"
-    | "transpilerOptions"
+    import('@clownpack/bundless').IBuildOptions,
+    | 'name'
+    | 'targets'
+    | 'alias'
+    | 'extraBabelPresets'
+    | 'extraBabelPlugins'
+    | 'transpiler'
+    | 'transpilerOptions'
   >;
 
 /**
@@ -89,6 +89,6 @@ export type Configuration = BundlessConfiguration | WebpackConfiguration;
  * @public
  */
 export interface IApi extends IPluginAPI<Configuration> {
-  modifyWebpackConfig(fn: WebpackConfiguration["modifyWebpackConfig"]): void;
-  chainWebpack(fn: WebpackConfiguration["chainWebpack"]): void;
+  modifyWebpackConfig(fn: WebpackConfiguration['modifyWebpackConfig']): void;
+  chainWebpack(fn: WebpackConfiguration['chainWebpack']): void;
 }

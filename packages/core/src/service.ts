@@ -1,8 +1,8 @@
-import { AsyncSeriesWaterfallHook } from "tapable";
-import path from "path";
-import assert from "assert";
-import { type IPkg, colorette, type yParser } from "@clownpack/helper";
-import { loadEnv } from "./utils";
+import { AsyncSeriesWaterfallHook } from 'tapable';
+import path from 'path';
+import assert from 'assert';
+import { type IPkg, colorette, type yParser } from '@clownpack/helper';
+import { loadEnv } from './utils';
 import {
   ApplyPluginsType,
   ServiceStage,
@@ -12,10 +12,10 @@ import {
   type IHook,
   type IConfiguration,
   type IPluginAPI,
-} from "./types";
-import { DefaultConfigProvider, type IConfigProvider } from "./config";
-import { PluginAPI } from "./pluginAPI";
-import { DEFAULT_NODE_ENV } from "./constants";
+} from './types';
+import { DefaultConfigProvider, type IConfigProvider } from './config';
+import { PluginAPI } from './pluginAPI';
+import { DEFAULT_NODE_ENV } from './constants';
 
 /**
  * @public
@@ -35,9 +35,9 @@ export class Service<T extends IConfiguration> {
   readonly cwd: string;
   readonly env: string;
   readonly customEnv: string | undefined;
-  command: string = "";
-  frameworkName: string = "";
-  args: yParser.Arguments = { _: [], $0: "" };
+  command: string = '';
+  frameworkName: string = '';
+  args: yParser.Arguments = { _: [], $0: '' };
   hooks: Record<string, IHook[]> = {};
   methods: Record<string, Function[]> = {};
   plugins: Record<string, IPlugin> = {};
@@ -47,12 +47,12 @@ export class Service<T extends IConfiguration> {
   skipPluginIds = new Set<string>();
   stage: ServiceStage = ServiceStage.uninitialized;
   configProvider: IConfigProvider<T>;
-  pkgPath: string = "";
+  pkgPath: string = '';
   pkg: IPkg = {};
   options: IServiceOptions<T>;
 
   constructor(opts: string | IServiceOptions<T>) {
-    if (typeof opts === "string") {
+    if (typeof opts === 'string') {
       opts = {
         frameworkName: opts,
       };
@@ -72,7 +72,7 @@ export class Service<T extends IConfiguration> {
       });
 
     // load pkg
-    this.pkgPath = path.join(this.cwd, "package.json");
+    this.pkgPath = path.join(this.cwd, 'package.json');
     try {
       this.pkg = require(this.pkgPath);
     } catch (e) {}
@@ -91,7 +91,7 @@ export class Service<T extends IConfiguration> {
 
     this.stage = ServiceStage.init;
     // load dotEnv
-    loadEnv({ cwd: this.cwd, env: this.env, envFile: ".env", customEnv: this.customEnv });
+    loadEnv({ cwd: this.cwd, env: this.env, envFile: '.env', customEnv: this.customEnv });
 
     // load configFile
     this.userConfig = this.configProvider.getUserConfig();
@@ -100,7 +100,7 @@ export class Service<T extends IConfiguration> {
     const plugins = PluginAPI.resolvePlugins({
       cwd: this.cwd,
       plugins: [
-        require.resolve("./preset"),
+        require.resolve('./preset'),
         ...(this.options.plugins || []),
         ...(this.userConfig.plugins || []),
       ],
@@ -118,18 +118,18 @@ export class Service<T extends IConfiguration> {
 
     assert(
       commandImpl,
-      `Invalid command ${colorette.redBright(this.command)}, it's not registered.`,
+      `Invalid command ${colorette.redBright(this.command)}, it's not registered.`
     );
 
     this.stage = ServiceStage.resolveConfig;
     this.config = await this.applyPlugins({
-      name: "modifyConfig",
+      name: 'modifyConfig',
       initialValue: this.userConfig,
     });
 
     this.stage = ServiceStage.onStart;
     await this.applyPlugins({
-      name: "onStart",
+      name: 'onStart',
     });
 
     this.stage = ServiceStage.runCommand;
@@ -149,11 +149,11 @@ export class Service<T extends IConfiguration> {
 
     let type = opts.type;
     if (!type) {
-      if (opts.name.startsWith("on")) {
+      if (opts.name.startsWith('on')) {
         type = ApplyPluginsType.event;
-      } else if (opts.name.startsWith("add")) {
+      } else if (opts.name.startsWith('add')) {
         type = ApplyPluginsType.add;
-      } else if (opts.name.startsWith("modify")) {
+      } else if (opts.name.startsWith('modify')) {
         type = ApplyPluginsType.modify;
       } else {
         throw new Error(`Invalid applyPlugins arguments, type must be supplied for ${opts.name}.`);
@@ -162,7 +162,7 @@ export class Service<T extends IConfiguration> {
 
     switch (type) {
       case ApplyPluginsType.add:
-        const addWaterfall = new AsyncSeriesWaterfallHook(["memo"]);
+        const addWaterfall = new AsyncSeriesWaterfallHook(['memo']);
         for (const hook of hooks) {
           if (!this.isPluginEnable(hook)) continue;
           addWaterfall.tapPromise(
@@ -175,12 +175,12 @@ export class Service<T extends IConfiguration> {
               const res = await hook.apply(opts.args);
               memo.push(res);
               return memo;
-            },
+            }
           );
         }
         return addWaterfall.promise(opts.initialValue || []);
       case ApplyPluginsType.modify:
-        const modifyWaterfall = new AsyncSeriesWaterfallHook(["arg"]);
+        const modifyWaterfall = new AsyncSeriesWaterfallHook(['arg']);
         for (const hook of hooks) {
           if (!this.isPluginEnable(hook)) continue;
           modifyWaterfall.tapPromise(
@@ -191,12 +191,12 @@ export class Service<T extends IConfiguration> {
             },
             async (memo: any) => {
               return hook.apply(memo, opts.args);
-            },
+            }
           );
         }
         return modifyWaterfall.promise(opts.initialValue);
       case ApplyPluginsType.event:
-        const eventWaterfall = new AsyncSeriesWaterfallHook(["_"]);
+        const eventWaterfall = new AsyncSeriesWaterfallHook(['_']);
         for (const hook of hooks) {
           if (!this.isPluginEnable(hook)) continue;
           eventWaterfall.tapPromise(
@@ -207,13 +207,13 @@ export class Service<T extends IConfiguration> {
             },
             async () => {
               await hook.apply(opts.args);
-            },
+            }
           );
         }
         return eventWaterfall.promise(1);
       default:
         throw new Error(
-          `applyPlugins failed, type is not defined or is not matched, got ${opts.type}.`,
+          `applyPlugins failed, type is not defined or is not matched, got ${opts.type}.`
         );
     }
   }
@@ -231,13 +231,10 @@ export class Service<T extends IConfiguration> {
     return true;
   }
 
-  private async walkPlugin(opts: {
-    current: IPlugin;
-    plugins: IPlugin[];
-  }) {
+  private async walkPlugin(opts: { current: IPlugin; plugins: IPlugin[] }) {
     assert(
       !this.plugins[opts.current.id],
-      `plugin ${colorette.redBright(opts.current.name)} is already registered.`,
+      `plugin ${colorette.redBright(opts.current.name)} is already registered.`
     );
     this.plugins[opts.current.id] = opts.current;
     const api = new PluginAPI({
@@ -250,16 +247,16 @@ export class Service<T extends IConfiguration> {
       api,
       service: this,
       serviceProps: [
-        "args",
-        "applyPlugins",
-        "config",
-        "cwd",
-        "env",
-        "command",
-        "userConfig",
-        "pkg",
-        "pkgPath",
-        "isPluginEnable",
+        'args',
+        'applyPlugins',
+        'config',
+        'cwd',
+        'env',
+        'command',
+        'userConfig',
+        'pkg',
+        'pkgPath',
+        'isPluginEnable',
       ],
       extraProps: {
         ServiceStage,

@@ -1,8 +1,11 @@
 {
   "name": "playground",
   "version": "1.0.0",
-  "description": "",
   "private": true,
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
   "main": "./dist/main.js",
   "scripts": {
     "dev": "clownpack dev",
@@ -10,16 +13,13 @@
     "lint": "clownpack lint",
     "clownpack": "clownpack"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@clownpack/cli": "workspace:*",
-    "@clownpack/bundler-webpack": "workspace:*"
-  },
   "dependencies": {
     "vue": "^2.6",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2"
+  },
+  "devDependencies": {
+    "@clownpack/bundler-webpack": "workspace:*",
+    "@clownpack/cli": "workspace:*"
   }
 }

@@ -1,14 +1,14 @@
-import type { IAnyObject, IPkg } from "@clownpack/helper";
-import type webpack from "webpack";
-import type Config from "webpack-5-chain";
+import type { IAnyObject, IPkg } from '@clownpack/helper';
+import type webpack from 'webpack';
+import type Config from 'webpack-5-chain';
 
 /**
  * 打包环境变量
  * @public
  */
 export enum Env {
-  development = "development",
-  production = "production",
+  development = 'development',
+  production = 'production',
 }
 
 /**
@@ -16,9 +16,9 @@ export enum Env {
  * @public
  */
 export enum Transpiler {
-  babel = "babel",
-  swc = "swc",
-  esbuild = "esbuild",
+  babel = 'babel',
+  swc = 'swc',
+  esbuild = 'esbuild',
 }
 
 /**
@@ -26,10 +26,10 @@ export enum Transpiler {
  * @public
  */
 export enum JSMinifier {
-  terser = "terser",
-  swc = "swc",
-  esbuild = "esbuild",
-  uglifyJs = "uglifyJs",
+  terser = 'terser',
+  swc = 'swc',
+  esbuild = 'esbuild',
+  uglifyJs = 'uglifyJs',
 }
 
 /**
@@ -37,9 +37,9 @@ export enum JSMinifier {
  * @public
  */
 export enum CSSMinifier {
-  esbuild = "esbuild",
-  cssnano = "cssnano",
-  parcelCSS = "parcelCSS",
+  esbuild = 'esbuild',
+  cssnano = 'cssnano',
+  parcelCSS = 'parcelCSS',
 }
 
 /**
@@ -70,7 +70,7 @@ export interface IBuildOptions {
   /**
    * 入口
    */
-  entry: Record<string, string>;
+  input: Record<string, string>;
   /**
    * 支持平台
    */
@@ -86,11 +86,11 @@ export interface IBuildOptions {
   /**
    * webpack缓存配置
    */
-  cache?: webpack.Configuration["cache"];
+  cache?: webpack.Configuration['cache'];
   /**
    * copy插件配置
    */
-  copy?: import("copy-webpack-plugin").Pattern[];
+  copy?: import('copy-webpack-plugin').Pattern[];
   /**
    * 全局变量定义
    */
@@ -98,7 +98,7 @@ export interface IBuildOptions {
   /**
    * 监听模式配置
    */
-  watch?: boolean | webpack.Configuration["watch"] | webpack.Configuration["watchOptions"];
+  watch?: boolean | webpack.Configuration['watch'] | webpack.Configuration['watchOptions'];
   /**
    * 依赖分析
    */
@@ -130,7 +130,7 @@ export interface IBuildOptions {
   /**
    * 清空输出目录
    */
-  clean?: boolean | webpack.CleanPlugin["options"];
+  clean?: boolean | webpack.CleanPlugin['options'];
 
   /**
    * svgo 配置
@@ -165,8 +165,8 @@ export interface IBuildOptions {
    */
   cssExtract?:
     | boolean
-    | (import("mini-css-extract-plugin").PluginOptions &
-        import("mini-css-extract-plugin").LoaderOptions);
+    | (import('mini-css-extract-plugin').PluginOptions &
+        import('mini-css-extract-plugin').LoaderOptions);
   /**
    * css 配置
    */
@@ -183,7 +183,7 @@ export interface IBuildOptions {
    * autoprefixer 配置
    */
   // @ts-ignore
-  autoprefixer?: import("autoprefixer").Options;
+  autoprefixer?: import('autoprefixer').Options;
   /**
    * 额外postcss插件
    */
@@ -217,14 +217,14 @@ export interface IBuildOptions {
    */
   chainWebpack?(
     config: Config,
-    opts: { env: `${Env}`; webpack: typeof webpack },
+    opts: { env: `${Env}`; webpack: typeof webpack }
   ): void | Promise<void>;
   /**
    * 修改webpack配置
    */
   modifyWebpackConfig?(
     config: webpack.Configuration,
-    opts: { env: `${Env}`; webpack: typeof webpack },
+    opts: { env: `${Env}`; webpack: typeof webpack }
   ): webpack.Configuration | Promise<webpack.Configuration>;
   /**
    * 构建是否完成
@@ -233,6 +233,6 @@ export interface IBuildOptions {
     err?: Error | null;
     stats?: webpack.Stats;
     isFirstCompile: boolean;
-    close?: webpack.Watching["close"];
+    close?: webpack.Watching['close'];
   }): void | Promise<void>;
 }

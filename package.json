@@ -1,15 +1,28 @@
 {
   "name": "clownpack",
   "version": "0.0.0",
-  "description": "A bundle build tool",
   "private": true,
-  "keywords": [],
+  "packageManager": "pnpm@8.1.0",
+  "description": "A bundle build tool",
   "author": "Binbiubiubiu <2632003786@qq.com>",
   "license": "MIT",
+  "homepage": "https://github.com/Binbiubiubiu/clownpack#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Binbiubiubiu/clownpack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Binbiubiubiu/clownpack/issues"
+  },
+  "keywords": [],
+  "engines": {
+    "node": ">=14",
+    "pnpm": ">=7"
+  },
   "scripts": {
     "build": "turbo run build",
     "test": "turbo run test",
-    "lint": "rome ci . && prettier --check .",
+    "lint": "eslint . && prettier --check .",
     "format": "rome format --write . && prettier --write .",
     "clean": "rimraf --glob  .turbo ./node_modules/.cache/turbo ./packages/*/{.turbo,dist,dist-dts,coverage,*.lcov}",
     "play": "pnpm build && pnpm --filter=playground run clownpack ",
@@ -19,47 +32,35 @@
     "prepare": "is-ci || husky install",
     "changeset": "changeset"
   },
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
-      "rome check",
-      "rome format --write"
-    ],
-    "*.{json,md,yaml}": [
-      "prettier --write"
-    ]
-  },
-  "packageManager": "pnpm@8.1.0",
-  "engines": {
-    "node": ">=14",
-    "pnpm": ">=7"
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.1",
     "@commitlint/cli": "^17.5.1",
     "@commitlint/config-conventional": "^17.4.4",
+    "@laze/commitlint-config": "^0.0.4",
+    "@laze/eslint-config": "^0.0.7",
+    "@laze/prettier-config": "^0.0.3",
     "@microsoft/api-extractor": "^7.34.4",
     "@types/node": "^18.15.11",
     "@types/resolve": "^1.20.2",
+    "eslint": "^8.38.0",
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",
     "lint-staged": "^13.2.0",
     "prettier": "^2.8.7",
     "rimraf": "^4.4.1",
     "rome": "^12.0.0",
-    "turbo": "^1.8.8",
+    "turbo": "^1.9.3",
     "typescript": "^5.0.3"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Binbiubiubiu/clownpack.git"
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,md,yaml}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
-  "bugs": {
-    "url": "https://github.com/Binbiubiubiu/clownpack/issues"
-  },
-  "homepage": "https://github.com/Binbiubiubiu/clownpack#readme"
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }

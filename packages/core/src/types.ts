@@ -1,6 +1,6 @@
-import type { IAnyObject } from "@clownpack/helper";
-import { PluginAPI } from "./pluginAPI";
-import type { Service } from "./service";
+import type { IAnyObject } from '@clownpack/helper';
+import { PluginAPI } from './pluginAPI';
+import type { Service } from './service';
 
 /**
  * @public
@@ -18,9 +18,9 @@ export enum ServiceStage {
  * @public
  */
 export enum ApplyPluginsType {
-  add = "add",
-  modify = "modify",
-  event = "event",
+  add = 'add',
+  modify = 'modify',
+  event = 'event',
 }
 
 /**
@@ -38,7 +38,7 @@ export type PluginItem = string | [string, IAnyObject];
  */
 export type PluginSetup<T, Options> = (
   api: T,
-  options?: Options,
+  options?: Options
 ) => {
   plugins: PluginItem[];
 } | void;
@@ -151,7 +151,7 @@ export interface IAdd<T, U> {
 export interface IPluginAPI<T extends IConfiguration>
   extends Pick<
     PluginAPI,
-    "register" | "registerCommand" | "registerMethod" | "addPluginOptsSchema" | "skipPlugins"
+    'register' | 'registerCommand' | 'registerMethod' | 'addPluginOptsSchema' | 'skipPlugins'
   > {
   cwd: typeof Service.prototype.cwd;
   env: typeof Service.prototype.env;

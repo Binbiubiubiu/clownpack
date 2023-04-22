@@ -1,13 +1,13 @@
-import { Logger, yParser } from "@clownpack/helper";
-import { Service } from "@clownpack/core";
-import { CliCmd, FRAMEWORK_NAME } from "../constants";
-import { Env } from "../types";
-import { printFrameworkInfo } from "./utils";
+import { Logger, yParser } from '@clownpack/helper';
+import { Service } from '@clownpack/core';
+import { CliCmd, FRAMEWORK_NAME } from '../constants';
+import { Env } from '../types';
+import { printFrameworkInfo } from './utils';
 
 export async function run() {
   const args = yParser(process.argv.slice(2));
 
-  let command = `${args._[0] ?? ""}`;
+  let command = `${args._[0] ?? ''}`;
 
   switch (command) {
     case CliCmd.dev:
@@ -25,14 +25,14 @@ export async function run() {
     frameworkName: FRAMEWORK_NAME,
     cwd: process.cwd(),
     env: process.env.NODE_ENV,
-    plugins: [require.resolve("../preset")],
+    plugins: [require.resolve('../preset')],
   });
 
   printFrameworkInfo();
   if (args.version || args.v) {
-    command = "version";
+    command = 'version';
   } else if (args.help || args.h || !command) {
-    command = "help";
+    command = 'help';
   }
 
   await service.run({
@@ -41,7 +41,7 @@ export async function run() {
   });
 }
 
-run().catch((e) => {
+run().catch(e => {
   console.error(e);
   process.exit(1);
 });

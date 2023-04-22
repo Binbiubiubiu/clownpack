@@ -1,9 +1,9 @@
-import { definePlugin } from "../define";
+import { definePlugin } from '../define';
 
-export default definePlugin((api) => {
+export default definePlugin(api => {
   api.registerCommand({
-    name: "dev",
-    description: "Start build in watch mode",
+    name: 'dev',
+    description: 'Start build in watch mode',
     apply: () => {
       console.log(api.args);
     },
